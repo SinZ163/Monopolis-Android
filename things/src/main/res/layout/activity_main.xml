@@ -18,9 +18,7 @@
     <fragment
         android:id="@+id/fragment"
         android:name="me.syrin.monopolis.common.TestFragment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:layout_editor_absoluteX="179dp"
-        tools:layout_editor_absoluteY="125dp" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </android.support.constraint.ConstraintLayout>

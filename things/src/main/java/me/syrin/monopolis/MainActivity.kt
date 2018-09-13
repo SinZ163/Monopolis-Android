@@ -1,6 +1,6 @@
 package me.syrin.monopolis
 
-import android.app.Activity
+import android.support.v4.app.FragmentActivity
 import android.os.Bundle
 
 /**
@@ -23,7 +23,7 @@ import android.os.Bundle
  * @see <a href="https://github.com/androidthings/contrib-drivers#readme">https://github.com/androidthings/contrib-drivers#readme</a>
  *
  */
-class MainActivity : Activity() {
+class MainActivity : FragmentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
