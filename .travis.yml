@@ -1,0 +1,19 @@
+language: android
+sudo: false
+android:
+  components:
+    - tools
+    - platform-tools
+    # Repeated to force latest
+    - tools
+    # The SDK version used to compile your project
+    - android-$ANDROID_API
+before_install:
+- yes | sdkmanager "platforms;android-28" # This is probably a mistake
+- yes | sdkmanager "build-tools;27.0.3" # This is probably a mistake
+script:
+  - ./gradlew build
+env:
+  matrix:
+    - ANDROID_API=21
+    - ANDROID_API=28
