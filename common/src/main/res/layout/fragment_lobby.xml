@@ -4,12 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    tools:context=".LobbyActivity">
+    tools:context=".LobbyFragment">
 
-    <fragment
-        android:id="@+id/fragment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:name="me.syrin.monopolis.common.LobbyFragment" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_games"
+        android:layout_width="600dp"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical" />
 
 </LinearLayout>

@@ -1,4 +1,4 @@
-package me.syrin.monopolis
+package me.syrin.monopolis.common
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
