@@ -1,6 +1,12 @@
 <resources>
     <string name="app_name">Monopolis</string>
+
+    <!--Main menu-->
     <string name="button_create_game">Create Game</string>
     <string name="button_join_game">Join Game</string>
     <string name="button_change_board">Change Board</string>
+
+    <!--Pregame-->
+    <string name="label_players">Players</string>
+    <string name="button_start_game">Start game</string>
 </resources>
