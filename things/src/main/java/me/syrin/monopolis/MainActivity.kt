@@ -2,6 +2,8 @@ package me.syrin.monopolis
 
 import androidx.fragment.app.FragmentActivity
 import android.os.Bundle
+import kotlinx.android.synthetic.main.activity_main.*
+import org.jetbrains.anko.startActivity
 
 /**
  * Skeleton of an Android Things activity.
@@ -28,5 +30,9 @@ class MainActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        button_join_game.setOnClickListener {
+            startActivity<LobbyActivity>()
+        }
     }
 }
