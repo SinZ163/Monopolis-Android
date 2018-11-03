@@ -18,8 +18,6 @@ class TestFragment : Fragment() {
     lateinit var ws: WebSocket
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        // TEMP: Wake up the connection
-        val ws = WebSocket.instance
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_test, container, false)
     }

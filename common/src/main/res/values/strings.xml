@@ -1,6 +1,10 @@
 <resources>
-    <string name="app_name">Monopolis Common</string>
+    <string name="app_name">Monopolis</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!--Main menu-->
+    <string name="button_create_game">Create Game</string>
+    <string name="button_join_game">Join Game</string>
+    <string name="button_settings">Settings</string>
 </resources>

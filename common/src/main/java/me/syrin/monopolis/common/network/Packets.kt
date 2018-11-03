@@ -11,4 +11,13 @@ interface IPacket {}
 data class ChatPacket(val msg: String) : IPacket
 
 @Serializable
+data class LoginPacket(val name: String) : IPacket
+
+@Serializable
+data class Lobby(val lobbyID: Int, val lobbyName: String, val playerCount: Int, val maxCount: Int) : IPacket
+
+@Serializable
+data class LobbyListPacket(val lobbies: List<Lobby>)
+
+@Serializable
 data class ErrorPacket(val error: String) : IPacket

@@ -5,10 +5,19 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.lobby_game.view.*
+import me.syrin.monopolis.common.network.Lobby
 
-class LobbyGamesAdapter(private val myDataset: ArrayList<LobbyGame>) :
+class LobbyGamesAdapter :
         RecyclerView.Adapter<LobbyGamesAdapter.LobbyGameViewHolder>() {
 
+    private val myDataset: ArrayList<Lobby> = ArrayList()
+
+    fun update(data: Collection<Lobby>) {
+        myDataset.clear()
+        myDataset.addAll(data)
+        // TODO: Change this to DiffUtil stuff
+        notifyDataSetChanged()
+    }
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder.
@@ -32,7 +41,7 @@ class LobbyGamesAdapter(private val myDataset: ArrayList<LobbyGame>) :
     override fun onBindViewHolder(holder: LobbyGameViewHolder, position: Int) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        holder.linearLayout.game_name.text = myDataset[position].name
+        holder.linearLayout.game_name.text = myDataset[position].lobbyName
         holder.linearLayout.player_count.text = myDataset[position].playerCount.toString() + " / 8 players"
     }
 

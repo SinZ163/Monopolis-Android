@@ -13,6 +13,7 @@ class WebSocket : WebSocketClient(URI) {
 
     override fun onOpen(handshakedata: ServerHandshake?) {
         Log.d("WebSocket", "onOpen")
+        WebSocket.send(LoginPacket("Test"))
     }
 
     override fun onClose(code: Int, reason: String?, remote: Boolean) {
@@ -31,6 +32,8 @@ class WebSocket : WebSocketClient(URI) {
 
         val packet = when(packetID) {
             0 -> JSON.parse(ChatPacket.serializer(), rawData)
+            2 -> JSON.parse(LobbyListPacket.serializer(), rawData)
+            3 -> JSON.parse(Lobby.serializer(), rawData)
             255 -> JSON.parse(ErrorPacket.serializer(), rawData)
             else -> Log.e("WebSocket", "Unknown packet: $packetID")
         }
@@ -51,6 +54,7 @@ class WebSocket : WebSocketClient(URI) {
         fun send(packet: IPacket) {
             val packetID = when(packet) {
                 is ChatPacket -> 0
+                is LoginPacket -> 1
                 is ErrorPacket -> 255
                 else -> -1
             }
