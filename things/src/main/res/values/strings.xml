@@ -4,7 +4,7 @@
     <!--Main menu-->
     <string name="button_create_game">Create Game</string>
     <string name="button_join_game">Join Game</string>
-    <string name="button_change_board">Change Board</string>
+    <string name="button_settings">Settings</string>
 
     <!--Pregame-->
     <string name="label_players">Players</string>
