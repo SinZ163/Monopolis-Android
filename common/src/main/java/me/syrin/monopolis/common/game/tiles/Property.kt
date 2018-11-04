@@ -1,0 +1,29 @@
+package me.syrin.monopolis.common.game.tiles
+
+import me.syrin.monopolis.common.game.Monopolis
+import me.syrin.monopolis.common.game.Player
+
+abstract class Property(name: String, val price: Int, val propertySetId: PropertySet) : Tile(name) {
+    var owner: Player? = null
+    var mortgaged: Boolean = false
+
+    override fun onPlayerLand(game: Monopolis, player: Player) {
+        // If property owned by another player, pay player
+        if (owner != null) {
+            chargePlayer(game, player)
+        }
+
+        // If property not owned, offer to buy
+        // TODO: this
+    }
+
+    abstract fun chargePlayer(game: Monopolis, player: Player)
+
+    fun mortgage() {
+        // Change mortgage status and credit player
+        if (mortgaged) return
+
+        mortgaged = true
+        owner?.credit(price / 2)
+    }
+}
