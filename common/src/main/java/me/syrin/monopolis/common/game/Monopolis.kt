@@ -43,6 +43,10 @@ class Monopolis {
             // Normal turn
             rollDice()
             player.location = ((player.location + rollValue()) % tiles.count())
+            // Pass go?
+            if (rollValue() > player.location) {
+                player.credit(200)
+            }
             tiles[player.location].onPlayerLand(this, player)
         }
     }
