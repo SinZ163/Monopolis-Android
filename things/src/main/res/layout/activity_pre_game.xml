@@ -47,6 +47,7 @@
                 android:text="Test's game" />
 
             <Button
+                android:id="@+id/button_start_game"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="20dp"

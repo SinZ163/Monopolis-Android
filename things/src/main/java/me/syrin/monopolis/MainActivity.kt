@@ -27,7 +27,7 @@ class MainActivity : FragmentActivity() {
             inputView.player_count.wrapSelectorWheel = false
             inputView.game_name.inputType = InputType.TYPE_CLASS_TEXT
 
-            val builder: AlertDialog.Builder = AlertDialog.Builder(this)
+            val builder = AlertDialog.Builder(this)
             builder.setTitle("Game setup")
             builder.setView(inputView)
 

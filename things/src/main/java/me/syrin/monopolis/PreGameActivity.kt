@@ -3,6 +3,7 @@ package me.syrin.monopolis
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
 import kotlinx.android.synthetic.main.activity_pre_game.*
+import org.jetbrains.anko.startActivity
 
 class PreGameActivity : FragmentActivity() {
 
@@ -20,6 +21,10 @@ class PreGameActivity : FragmentActivity() {
         else {
             // game is being joined
 
+        }
+
+        button_start_game.setOnClickListener {
+            startActivity<GameActivity>()
         }
     }
 }
