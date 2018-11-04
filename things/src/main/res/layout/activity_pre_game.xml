@@ -21,6 +21,7 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_players"
+            android:scrollbars="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="20dp"
@@ -59,7 +60,7 @@
 
         <fragment
             android:id="@+id/fragment_chat"
-            android:name="me.syrin.monopolis.common.TestFragment"
+            android:name="me.syrin.monopolis.common.ChatFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="20dp" />
