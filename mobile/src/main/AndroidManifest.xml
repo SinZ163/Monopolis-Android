@@ -16,7 +16,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".LobbyActivity"></activity>
+        <activity android:name=".LobbyActivity" />
+        <activity android:name=".GameActivity" />
+        <activity android:name=".PreGameActivity"></activity>
     </application>
 
 </manifest>

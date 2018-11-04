@@ -33,8 +33,8 @@ class TestFragment : Fragment() {
         EventBus.subscribe<ChatPacket>()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                    dump.text = dump.text.toString() + "\n" +it.msg
-                    Log.i("TestFragment", "Did you see ${it.msg}")
+                    dump.text = dump.text.toString() + "\n" +it.message
+                    Log.i("TestFragment", "Did you see ${it.message}")
                 }
     }
 

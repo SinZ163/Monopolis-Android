@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
+import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.activity_main.*
 import me.syrin.monopolis.common.network.Monopolis
 import org.jetbrains.anko.startActivity
@@ -15,6 +16,13 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         var keepplz = Monopolis()
+        Monopolis.lobby.observe(this, Observer {
+            if (it?.ingame == true) {
+                startActivity<GameActivity>()
+            } else {
+                startActivity<PreGameActivity>()
+            }
+        })
         Log.d("MainActivity", "Connecting to ${keepplz}")
 
         button_join_game.setOnClickListener {
