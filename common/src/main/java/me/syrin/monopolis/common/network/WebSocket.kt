@@ -8,7 +8,7 @@ import java.lang.Exception
 import org.json.JSONTokener
 import kotlinx.serialization.json.JSON
 
-val URI = java.net.URI("ws://192.168.0.7:8000")
+val URI = java.net.URI("ws://grimm.361zn.is:8000")
 class WebSocket : WebSocketClient(URI) {
 
     override fun onOpen(handshakedata: ServerHandshake?) {
