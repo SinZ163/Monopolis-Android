@@ -1,11 +1,14 @@
 package me.syrin.monopolis.common
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.lobby_game.view.*
+import me.syrin.monopolis.common.network.JoinLobbyPacket
 import me.syrin.monopolis.common.network.Lobby
+import me.syrin.monopolis.common.network.WebSocket
 
 class LobbyGamesAdapter :
         RecyclerView.Adapter<LobbyGamesAdapter.LobbyGameViewHolder>() {
@@ -42,7 +45,11 @@ class LobbyGamesAdapter :
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         holder.linearLayout.game_name.text = myDataset[position].lobbyName
-        holder.linearLayout.player_count.text = myDataset[position].playerCount.toString() + " / 8 players"
+        holder.linearLayout.player_count.text = "${myDataset[position].playerCount} / ${myDataset[position].maxCount} players"
+        holder.linearLayout.join_game.setOnClickListener {
+            Log.i("LobbyGamesAdapter", "Pressed Join Game for ${myDataset[position]}")
+            WebSocket.send(JoinLobbyPacket(myDataset[position].lobbyID))
+        }
     }
 
     // Return the size of your dataset (invoked by the layout manager)

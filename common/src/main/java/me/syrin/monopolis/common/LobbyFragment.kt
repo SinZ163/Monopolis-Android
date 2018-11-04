@@ -1,6 +1,7 @@
 package me.syrin.monopolis.common
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -26,6 +27,7 @@ class LobbyFragment : Fragment() {
         val viewManager = LinearLayoutManager(context)
         val viewAdapter = LobbyGamesAdapter()
         Monopolis.lobbies.observe(this, Observer<Map<Int, Lobby>> {
+            Log.i("Debug", "What is $viewAdapter what is $it what is ${it.values}")
             viewAdapter.update(it.values)
         })
 

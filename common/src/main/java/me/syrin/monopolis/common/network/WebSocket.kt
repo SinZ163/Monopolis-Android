@@ -34,6 +34,8 @@ class WebSocket : WebSocketClient(URI) {
             0 -> JSON.parse(ChatPacket.serializer(), rawData)
             2 -> JSON.parse(LobbyListPacket.serializer(), rawData)
             3 -> JSON.parse(Lobby.serializer(), rawData)
+            4 -> JSON.parse(LobbyClosedPacket.serializer(), rawData)
+            8 -> JSON.parse(LobbyInfoPacket.serializer(), rawData)
             255 -> JSON.parse(ErrorPacket.serializer(), rawData)
             else -> Log.e("WebSocket", "Unknown packet: $packetID")
         }
@@ -42,7 +44,8 @@ class WebSocket : WebSocketClient(URI) {
     }
 
     override fun onError(ex: Exception?) {
-        Log.e("WebSocket", "$ex")
+        Log.e("WebSocket", "${ex?.message}")
+        ex?.printStackTrace()
     }
     companion object {
         val instance: WebSocket = WebSocket()
@@ -55,6 +58,9 @@ class WebSocket : WebSocketClient(URI) {
             val packetID = when(packet) {
                 is ChatPacket -> 0
                 is LoginPacket -> 1
+                is LeaveLobbyPacket -> 5
+                is CreateLobbyPacket -> 6
+                is JoinLobbyPacket -> 7
                 is ErrorPacket -> 255
                 else -> -1
             }
