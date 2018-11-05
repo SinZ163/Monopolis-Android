@@ -19,8 +19,8 @@ class MainActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        var keepplz = Monopolis()
-        Log.d("MainActivity", "Connecting to ${keepplz}")
+        // TODO: SharedPreferences
+        Monopolis.init("Things")
         Monopolis.lobby.observe(this, Observer<LobbyState?> {
             if (it?.ingame == true) {
                 startActivity<GameActivity>()
