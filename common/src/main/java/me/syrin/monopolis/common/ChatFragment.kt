@@ -24,6 +24,9 @@ class ChatFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        scroll_chat.fullScroll(View.FOCUS_DOWN)
+
         send.setOnClickListener {
             WebSocket.send(ChatPacket("I'm making a note here, huge success"))
         }

@@ -30,6 +30,9 @@ class Monopolis {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe {
                         lobbies.value = lobbies.value?.minus(it.lobbyID)
+                        if (it.lobbyID == lobby.value?.id) {
+                            lobby.value = null
+                        }
                     }
             EventBus.subscribe<LobbyInfoPacket>()
                     .observeOn(AndroidSchedulers.mainThread())

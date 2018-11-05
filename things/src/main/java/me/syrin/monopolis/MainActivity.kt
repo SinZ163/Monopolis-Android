@@ -9,7 +9,9 @@ import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.create_game_dialog.view.*
 import me.syrin.monopolis.common.LobbyState
+import me.syrin.monopolis.common.network.CreateLobbyPacket
 import me.syrin.monopolis.common.network.Monopolis
+import me.syrin.monopolis.common.network.WebSocket
 import org.jetbrains.anko.startActivity
 
 class MainActivity : FragmentActivity() {
@@ -43,7 +45,8 @@ class MainActivity : FragmentActivity() {
                 // open pregame with passed name and player count
                 val name = inputView.game_name.text.toString()
                 val playerCount = inputView.player_count.value
-                startActivity<PreGameActivity>("game_name" to name, "player_count" to playerCount)
+//                startActivity<PreGameActivity>("game_name" to name, "player_count" to playerCount)
+                WebSocket.send(CreateLobbyPacket(name, playerCount))
             }
 
             builder.setNegativeButton("Cancel") { dialog, which ->

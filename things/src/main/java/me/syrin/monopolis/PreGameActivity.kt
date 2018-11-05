@@ -6,7 +6,9 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_pre_game.*
 import me.syrin.monopolis.common.LobbyState
+import me.syrin.monopolis.common.network.LeaveLobbyPacket
 import me.syrin.monopolis.common.network.Monopolis
+import me.syrin.monopolis.common.network.WebSocket
 import org.jetbrains.anko.startActivity
 
 class PreGameActivity : FragmentActivity() {
@@ -18,8 +20,13 @@ class PreGameActivity : FragmentActivity() {
         val viewAdapter = PlayerListAdapter()
 
         Monopolis.lobby.observe(this, Observer<LobbyState?> {
-            viewAdapter.update(it?.players as ArrayList<String>)
-            game_name.text = it?.name
+            if (it == null) {
+                onBackPressed()
+            }
+            else {
+                viewAdapter.update(it.players)
+                game_name.text = it.name
+            }
         })
 
         recycler_view_players.apply {
@@ -30,5 +37,10 @@ class PreGameActivity : FragmentActivity() {
         button_start_game.setOnClickListener {
             startActivity<GameActivity>()
         }
+    }
+
+    override fun onBackPressed() {
+        WebSocket.send(LeaveLobbyPacket(Monopolis.lobby.value?.id as Int))
+        super.onBackPressed()
     }
 }
