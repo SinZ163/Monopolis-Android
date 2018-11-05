@@ -7,14 +7,16 @@ import me.syrin.monopolis.common.LobbyState
 
 class Monopolis {
     companion object {
-        private val ws = WebSocket()
         val lobbies: MutableLiveData<Map<Int, Lobby>> = MutableLiveData()
 
         val lobby: MutableLiveData<LobbyState?> = MutableLiveData()
 
         val chatMessages: MutableLiveData<List<ChatMessage>> = MutableLiveData()
 
-        init {
+        lateinit var name: String
+        fun init(newName: String) {
+            WebSocket.init(newName)
+            name = newName
             EventBus.subscribe<LobbyListPacket>()
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe {

@@ -43,6 +43,10 @@ data class JoinLobbyPacket(val lobbyID: Int) : IPacket
 @Serializable
 data class LobbyInfoPacket(val id: Int, val name: String, val ingame: Boolean, val maxCount: Int, val host: String, val players: List<String>) : IPacket
 
+// 9
+@Serializable
+class StartLobbyPacket() : IPacket
+
 // 255
 @Serializable
 data class ErrorPacket(val error: String) : IPacket

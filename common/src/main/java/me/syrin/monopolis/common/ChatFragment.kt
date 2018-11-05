@@ -25,8 +25,6 @@ class ChatFragment : Fragment() {
     private lateinit var viewAdapter: ChatMessageAdapter
     private lateinit var viewManager: RecyclerView.LayoutManager
 
-    lateinit var ws: WebSocket
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment

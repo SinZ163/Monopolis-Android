@@ -9,11 +9,11 @@ import org.json.JSONTokener
 import kotlinx.serialization.json.JSON
 
 val URI = java.net.URI("ws://grimm.361zn.is:8000")
-class WebSocket : WebSocketClient(URI) {
+class WebSocket(var name: String) : WebSocketClient(URI) {
 
     override fun onOpen(handshakedata: ServerHandshake?) {
         Log.d("WebSocket", "onOpen")
-        WebSocket.send(LoginPacket("Test"))
+        WebSocket.send(LoginPacket(name))
     }
 
     override fun onClose(code: Int, reason: String?, remote: Boolean) {
@@ -48,9 +48,10 @@ class WebSocket : WebSocketClient(URI) {
         ex?.printStackTrace()
     }
     companion object {
-        val instance: WebSocket = WebSocket()
+        lateinit var instance: WebSocket
 
-        init {
+        fun init(name: String) {
+            instance = WebSocket(name)
             instance.connect()
         }
 
@@ -61,6 +62,7 @@ class WebSocket : WebSocketClient(URI) {
                 is LeaveLobbyPacket -> 5
                 is CreateLobbyPacket -> 6
                 is JoinLobbyPacket -> 7
+                is StartLobbyPacket -> 9
                 is ErrorPacket -> 255
                 else -> -1
             }
