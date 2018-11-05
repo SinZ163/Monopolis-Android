@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity() {
         Monopolis.lobby.observe(this, Observer {
             if (it?.ingame == true) {
                 startActivity<GameActivity>()
-            } else {
+            } else if (it != null) {
                 startActivity<PreGameActivity>()
             }
         })

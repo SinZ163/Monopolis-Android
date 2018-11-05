@@ -40,7 +40,10 @@ class PreGameActivity : FragmentActivity() {
     }
 
     override fun onBackPressed() {
-        WebSocket.send(LeaveLobbyPacket(Monopolis.lobby.value?.id as Int))
+        if (Monopolis.lobby.value != null) {
+            val lobby = Monopolis.lobby.value ?: return super.onBackPressed()
+            WebSocket.send(LeaveLobbyPacket(lobby.id))
+        }
         super.onBackPressed()
     }
 }

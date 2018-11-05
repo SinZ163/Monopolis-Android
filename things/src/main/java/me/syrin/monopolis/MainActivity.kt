@@ -24,7 +24,7 @@ class MainActivity : FragmentActivity() {
         Monopolis.lobby.observe(this, Observer<LobbyState?> {
             if (it?.ingame == true) {
                 startActivity<GameActivity>()
-            } else {
+            } else if (it != null) {
                 startActivity<PreGameActivity>()
             }
         })
