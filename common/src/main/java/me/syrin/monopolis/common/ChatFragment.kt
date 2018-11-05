@@ -11,12 +11,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.fragment_chat.*
 import me.syrin.monopolis.common.network.ChatPacket
 import me.syrin.monopolis.common.network.EventBus
+import me.syrin.monopolis.common.network.Monopolis
 import me.syrin.monopolis.common.network.WebSocket
 
 class ChatFragment : Fragment() {
@@ -62,12 +64,9 @@ class ChatFragment : Fragment() {
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        EventBus.subscribe<ChatPacket>()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    addMessage(ChatMessage(it.message, it.author))
-                    Log.i("ChatFragment", "Did you see ${it.message}")
-                }
+        Monopolis.chatMessages.observe(this, Observer<List<ChatMessage>> {
+            replaceMessages(it)
+        })
     }
 
     fun sendMessage() {
@@ -79,8 +78,8 @@ class ChatFragment : Fragment() {
         WebSocket.send(ChatPacket(text))
     }
 
-    fun addMessage(message: ChatMessage) {
-        viewAdapter.add(message)
+    fun replaceMessages(messages: List<ChatMessage>) {
+        viewAdapter.update(messages)
         recycler_view_chat.scrollToPosition(viewAdapter.itemCount - 1)
     }
 }
