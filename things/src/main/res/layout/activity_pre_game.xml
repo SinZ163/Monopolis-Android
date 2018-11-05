@@ -53,6 +53,7 @@
                 android:layout_height="match_parent"
                 android:layout_margin="20dp"
                 android:layout_gravity="center"
+                android:enabled="false"
                 android:textSize="30sp"
                 android:text="@string/button_start_game" />
 
