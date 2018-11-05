@@ -40,11 +40,9 @@ class ChatMessageAdapter : RecyclerView.Adapter<ChatMessageAdapter.ChatMessageVi
     // Return the size of your dataset (invoked by the layout manager)
     override fun getItemCount() = messages.size
 
-    fun add(message: ChatMessage) {
-        messages.add(message)
-        notifyDataSetChanged()
-    }
-    fun add(messages: ArrayList<ChatMessage>) {
+    fun update(messages: List<ChatMessage>) {
+        this.messages.clear()
         this.messages.addAll(messages)
+        notifyDataSetChanged()
     }
 }
