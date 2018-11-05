@@ -34,6 +34,7 @@ class Monopolis {
                         lobbies.value = lobbies.value?.minus(it.lobbyID)
                         if (it.lobbyID == lobby.value?.id) {
                             lobby.value = null
+                            chatMessages.value = listOf()
                         }
                     }
             EventBus.subscribe<LobbyInfoPacket>()
