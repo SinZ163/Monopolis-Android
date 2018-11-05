@@ -3,7 +3,7 @@ package me.syrin.monopolis.common.game.tiles
 import me.syrin.monopolis.common.game.Monopolis
 import me.syrin.monopolis.common.game.Player
 
-abstract class Property(name: String, val price: Int, val propertySet: PropertySet) : Tile(name) {
+abstract class Property(id: String, name: String, val propertySet: PropertySet, val price: Int) : Tile(id, name) {
     var owner: Player? = null
     var mortgaged: Boolean = false
 
