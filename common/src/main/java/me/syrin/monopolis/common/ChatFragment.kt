@@ -9,21 +9,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import io.reactivex.android.schedulers.AndroidSchedulers
-import kotlinx.android.synthetic.main.fragment_test.*
+import kotlinx.android.synthetic.main.fragment_chat.*
 import me.syrin.monopolis.common.network.ChatPacket
 import me.syrin.monopolis.common.network.EventBus
 import me.syrin.monopolis.common.network.WebSocket
 
-class TestFragment : Fragment() {
+class ChatFragment : Fragment() {
     lateinit var ws: WebSocket
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_test, container, false)
+        return inflater.inflate(R.layout.fragment_chat, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        scroll_chat.fullScroll(View.FOCUS_DOWN)
+
         send.setOnClickListener {
             WebSocket.send(ChatPacket("I'm making a note here, huge success"))
         }
@@ -34,7 +37,7 @@ class TestFragment : Fragment() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     dump.text = dump.text.toString() + "\n" +it.message
-                    Log.i("TestFragment", "Did you see ${it.message}")
+                    Log.i("ChatFragment", "Did you see ${it.message}")
                 }
     }
 
