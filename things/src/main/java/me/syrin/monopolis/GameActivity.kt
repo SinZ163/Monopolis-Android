@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
 import kotlinx.android.synthetic.main.activity_game.*
 import me.syrin.monopolis.common.GenericMessageDialogFragment
+import me.syrin.monopolis.common.game.Monopolis
 
 class GameActivity : FragmentActivity() {
 
@@ -14,6 +15,8 @@ class GameActivity : FragmentActivity() {
         button_test.setOnClickListener {
             displayGenericMessageDialog("test", "testererereerererewrer")
         }
+
+        Monopolis(this)
     }
 
     private fun displayGenericMessageDialog(title: String, description: String) {

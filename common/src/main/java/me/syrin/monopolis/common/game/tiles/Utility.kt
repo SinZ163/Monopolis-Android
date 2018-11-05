@@ -4,7 +4,7 @@ import me.syrin.monopolis.common.game.Monopolis
 import me.syrin.monopolis.common.game.Player
 import kotlin.random.Random
 
-class Utility(name: String) : Property(name, 150, PropertySet.Utility) {
+class Utility(id: String, name: String) : Property(id, name, PropertySet.Utility, 150) {
     override fun chargePlayer(game: Monopolis, player: Player) {
         // Pay from current dice roll
         chargeAmount(game, player, game.diceTotal())
