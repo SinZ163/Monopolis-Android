@@ -26,6 +26,9 @@ class PreGameActivity : FragmentActivity() {
             else {
                 viewAdapter.update(it.players)
                 game_name.text = it.name
+                if (it.host == "Test") {
+                    button_start_game.isEnabled = true
+                }
             }
         })
 

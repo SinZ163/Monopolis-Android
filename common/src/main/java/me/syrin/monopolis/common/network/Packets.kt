@@ -9,7 +9,7 @@ interface IPacket {}
 
 // 0
 @Serializable
-data class ChatPacket(val message: String) : IPacket
+data class ChatPacket(val message: String, val author: String? = null) : IPacket
 
 // 1
 @Serializable
