@@ -1,6 +1,5 @@
 package me.syrin.monopolis.common.network
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.android.schedulers.AndroidSchedulers
 import me.syrin.monopolis.common.LobbyState
