@@ -1,2 +1,3 @@
 <resources>
+    <string name="connecting_to_server">Connecting to server...</string>
 </resources>

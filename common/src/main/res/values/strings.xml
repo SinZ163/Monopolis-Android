@@ -11,4 +11,5 @@
     <!--Pregame-->
     <string name="label_players">Players</string>
     <string name="button_start_game">Start game</string>
+    <string name="button_continue">Continue</string>
 </resources>

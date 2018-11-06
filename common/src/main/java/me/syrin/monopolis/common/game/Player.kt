@@ -4,7 +4,7 @@ import me.syrin.monopolis.common.game.cards.Card
 import me.syrin.monopolis.common.game.tiles.Property
 import me.syrin.monopolis.common.game.tiles.PropertySet
 
-class Player(val game: Monopolis) {
+class Player(val game: Monopolis, val name: String) {
     var balance: Int = 1500 // Start with $1500
     var location: Int = 0   // Start at Go
     var jailed: Boolean = false
@@ -22,7 +22,7 @@ class Player(val game: Monopolis) {
 
         // Handle backrupting if negative balance
         if (balance < 0) {
-            // TODO: this
+            // TODO: give player option to sell things or for now they just lose
         }
     }
 
@@ -47,13 +47,32 @@ class Player(val game: Monopolis) {
         freeFromJail()
     }
 
+    fun moveForward(numSpaces: Int) {
+        location = ((location + numSpaces) % game.tiles.count())
+        game.tiles[location].onPlayerLand(game, this)
+    }
+
+    fun advanceTo(targetIndex: Int) {
+        if (targetIndex < location) {
+            // player passed go
+            credit(200)
+        }
+        location = targetIndex
+    }
     fun advanceTo(targetId: String) {
-        location = game.tiles.indexOfFirst { tile -> tile.id == targetId }
-        // TODO: receive 200?
+        advanceTo(game.tiles.indexOfFirst { tile -> tile.id == targetId })
     }
 
     fun advanceToNearest(propertySet: PropertySet) {
-        location = game.tiles.indexOfFirst { tile -> (tile as Property).propertySet == propertySet }
-        // TODO: receive 200?
+        var newLocation: Int
+        for (i in 0 until game.tiles.count()) {
+            // loops after i+location = 39 (last tile)
+            newLocation = (location + i) % 40
+
+            if ((game.tiles[newLocation] as? Property)?.propertySet == propertySet) {
+                advanceTo(newLocation)
+                return
+            }
+        }
     }
 }

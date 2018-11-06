@@ -11,8 +11,7 @@
         android:layout_margin="5dp"
         android:layout_gravity="center"
         android:textAlignment="center"
-        android:textSize="50sp"
-        android:text="Placeholder title" />
+        android:textSize="25sp" />
 
     <TextView
         android:id="@+id/text_view_description"
@@ -21,14 +20,22 @@
         android:layout_margin="5dp"
         android:layout_gravity="center"
         android:textAlignment="center"
-        android:textSize="20sp"
-        android:text="Placeholder description wow this is amazing" />
+        android:textSize="20sp" />
 
-    <ImageView
-        android:id="@+id/image_view"
+    <!--<ImageView-->
+        <!--android:id="@+id/image_view"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_margin="5dp"-->
+        <!--android:layout_gravity="center" />-->
+
+    <Button
+        android:id="@+id/button_continue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        android:padding="10dp"
+        android:textSize="10sp"
+        android:text="@string/button_continue" />
 
 </LinearLayout>

@@ -5,6 +5,7 @@ import androidx.fragment.app.FragmentActivity
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.text.InputType
+import android.view.View
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.create_game_dialog.view.*
@@ -28,6 +29,19 @@ class MainActivity : FragmentActivity() {
         else {
             Monopolis.init(name)
         }
+
+        Monopolis.connected.observe(this, Observer {
+            if (it) {
+                // connected
+                linear_layout_loading.visibility = View.GONE
+                linear_layout_buttons.visibility = View.VISIBLE
+            }
+            else {
+                // not connected
+                linear_layout_loading.visibility = View.VISIBLE
+                linear_layout_buttons.visibility = View.GONE
+            }
+        })
 
         Monopolis.lobby.observe(this, Observer {
             if (it?.ingame == true) {

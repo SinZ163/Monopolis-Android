@@ -4,6 +4,7 @@ package me.syrin.monopolis.common
 import android.content.Context
 import android.os.Bundle
 import android.util.AttributeSet
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -27,12 +28,10 @@ class BoardFragment : Fragment() {
 
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val monopolis = Monopolis(activity!!)
-        super.onViewCreated(view, savedInstanceState)
+    fun initialiseBoard(monopolis: Monopolis) {
         monopolis.tiles.forEachIndexed { index, tile ->
             val tileImageID = resources.getIdentifier("tile$index", "id", activity!!.packageName)
-            val tileImage = view.findViewById(tileImageID) as ImageView
+            val tileImage = view!!.findViewById(tileImageID) as ImageView
             tileImage.setImageDrawable(when(tile) {
                 is Go -> resources.getDrawable(R.drawable.go, null)
                 is Jail -> resources.getDrawable(R.drawable.jail, null)
@@ -46,8 +45,6 @@ class BoardFragment : Fragment() {
                 else -> null
             })
         }
-        //tile1.setImageDrawable(EstateDrawable(Estate("Brown1", "Mediter-ranean Avenue", PropertySet.Brown, 60,2,3,4,5,6,7)))
-        //tile3.setImageDrawable(EstateDrawable(Estate("Brown2", "Baltic Avenue", PropertySet.Brown, 400,2,3,4,5,6,7)))
     }
 }
 

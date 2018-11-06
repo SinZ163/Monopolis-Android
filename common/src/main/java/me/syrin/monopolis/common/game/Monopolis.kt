@@ -1,37 +1,48 @@
 package me.syrin.monopolis.common.game
 
-import android.content.Context
+import android.os.Bundle
+import androidx.fragment.app.FragmentActivity
+import me.syrin.monopolis.common.GenericMessageDialogFragment
 import me.syrin.monopolis.common.game.cards.Card
 import me.syrin.monopolis.common.game.cards.CardType
 import me.syrin.monopolis.common.game.tiles.*
 import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader
-import java.util.*
 import kotlin.random.Random
 
-class Monopolis(context: Context) {
+class Monopolis(val activity: FragmentActivity, playerList: List<String> = listOf()) {
     var tiles = listOf<Tile>()
 
     val players = arrayListOf<Player>()
     var currentPlayer = 0
 
+    val communityChestCards = getCards(CardType.CommunityChest)
+    val chanceCards = getCards(CardType.Chance)
+
     var diceOneAmount: Int = 0  // Set each turn
     var diceTwoAmount: Int = 0  // Set each turn
     fun diceTotal(): Int = diceOneAmount + diceTwoAmount
-    fun rollValue(): Int {
-        return if (diceOneAmount == diceTwoAmount)
-            diceTotal() * 2
-        else
-            diceTotal()
-    }
 
     init {
         // Read tiles in
         tiles = readTileDataFromCSV(
-                context.assets.open("tile_data.csv"),
-                context.assets.open("tile_names/uk.csv")
+                activity.assets.open("tile_data.csv"),
+                activity.assets.open("tile_names/uk.csv")
         )
+
+        for (name in playerList) {
+            players.add(Player(this, name))
+        }
+    }
+
+    fun displayGenericMessageDialog(title: String, description: String) {
+        val dialog = GenericMessageDialogFragment()
+        val bundle = Bundle()
+        bundle.putString("title", title)
+        bundle.putString("description", description)
+        dialog.arguments = bundle
+        dialog.show(activity.supportFragmentManager, "test")
     }
 
     fun readTileDataFromCSV(tileInput: InputStream, nameInput: InputStream): List<Tile> {
@@ -61,11 +72,11 @@ class Monopolis(context: Context) {
                     "CommunityChest" -> CardType.CommunityChest
                     "Chance" -> CardType.Chance
                     else -> throw Exception("invalid card type")
-                }, getCards(when (parts[2]) {
-                    "CommunityChest" -> CardType.CommunityChest
-                    "Chance" -> CardType.Chance
+                }, when (parts[2]) {
+                    "CommunityChest" -> communityChestCards
+                    "Chance" -> chanceCards
                     else -> throw Exception("invalid card type")
-                }))
+                })
                 "Estate" -> Estate(parts[1], nameString, when (parts[2]) {
                     "Brown" -> PropertySet.Brown
                     "LightBlue" -> PropertySet.LightBlue
@@ -89,7 +100,7 @@ class Monopolis(context: Context) {
         return tiles
     }
 
-    fun getCards(cardType: CardType): Queue<Card> {
+    fun getCards(cardType: CardType): MutableList<Card> {
         val cards = when (cardType) {
             CardType.CommunityChest -> mutableListOf(
                     Card(CardType.CommunityChest, "Advance to Go", "Advance to Go and collect ₩200.") { game, player, card ->
@@ -139,7 +150,7 @@ class Monopolis(context: Context) {
                         player.credit(25)
                     },
                     Card(CardType.CommunityChest, "You are assessed for street repairs", "Pay ₩40 per house and ₩115 per hotel you own.") { game, player, card ->
-                        // TODO: this
+                        // TODO: requires houses and hotels to be implemented
                     },
                     Card(CardType.CommunityChest, "You have won second prize in a beauty contest", "Collect ₩10.") { game, player, card ->
                         player.credit(10)
@@ -161,7 +172,7 @@ class Monopolis(context: Context) {
                     Card(CardType.Chance, "Advance to nearest Utility", "If unowned, you may buy it from the Bank. If owned, throw dice and pay owner a total 10 times the amount thrown.") { game, player, card ->
                         player.advanceToNearest(PropertySet.Utility)
                     },
-                    Card(CardType.Chance, "Advance token to the nearest Railroad", "If Railroad is unowned, you may buy it from the Bank. If owned, pay owner twice the rental to which he/she is otherwise entitled.") { game, player, card ->
+                    Card(CardType.Chance, "Advance to the nearest Railroad", "If Railroad is unowned, you may buy it from the Bank. If owned, pay owner twice the rental to which he/she is otherwise entitled.") { game, player, card ->
                         player.advanceToNearest(PropertySet.Railroad)
                     },
                     Card(CardType.Chance, "Bank pays you dividend of ₩50", "Receive ₩50") { game, player, card ->
@@ -176,12 +187,13 @@ class Monopolis(context: Context) {
                             // for example -1 (mayfair), which is 39. 40 + -1 = 39
                             player.location += 40
                         }
+                        game.tiles[player.location].onPlayerLand(game, player)
                     },
                     Card(CardType.Chance, "Go to Jail", "Go directly to Jail. Do not pass GO, do not collect ₩200.") { game, player, card ->
                         player.sendToJail()
                     },
                     Card(CardType.Chance, "Make general repairs on all your property", "For each house pay ₩25, For each hotel pay ₩100.") { game, player, card ->
-                        // TODO: this
+                        // TODO: requires houses and hotels to be implemented
                     },
                     Card(CardType.Chance, "Pay poor tax of ₩15", "Pay ₩15.") { game, player, card ->
                         player.pay(15, null)
@@ -206,9 +218,13 @@ class Monopolis(context: Context) {
             )
         }
 
-        val cardQueue = PriorityQueue<Card>()
-        cardQueue.addAll(cards.shuffled())
-        return cardQueue
+        cards.shuffle()
+
+        return cards
+    }
+
+    fun removePlayer(name: String) {
+        // TODO: remove player and cleanup assets
     }
 
     fun doTurn() {
@@ -220,7 +236,9 @@ class Monopolis(context: Context) {
         if (tiles[player.location].name == "Jail" && player.jailed) {
             // Check if player can jail roll
             if (player.remainingJailRolls > 0) {
+                // TODO: give player choice to pay
                 rollDice()
+                player.remainingJailRolls--
                 if (diceOneAmount == diceTwoAmount) {
                     // Free from jail
                     player.freeFromJail()
@@ -233,14 +251,27 @@ class Monopolis(context: Context) {
         }
         else {
             // Normal turn
-            rollDice()
-            player.location = ((player.location + rollValue()) % tiles.count())
-            // Pass go?
-            if (rollValue() > player.location) {
-                player.credit(200)
-            }
-            tiles[player.location].onPlayerLand(this, player)
+            normalRoll(player)
         }
+    }
+
+    private fun normalRoll(player: Player, rollJailCount: Int = 0) {
+        rollDice()
+
+        if (diceOneAmount == diceTwoAmount) {
+            // rolled a double
+            if (rollJailCount >= 2) {
+                // this is the third double! jail time
+                player.sendToJail()
+                return
+            } else {
+                // double! move and roll again
+                player.moveForward(diceTotal())
+                normalRoll(player, rollJailCount + 1)
+            }
+        }
+
+        player.moveForward(diceTotal())
     }
 
     private fun rollDice() {
