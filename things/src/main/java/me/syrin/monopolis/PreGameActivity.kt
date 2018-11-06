@@ -34,7 +34,7 @@ class PreGameActivity : FragmentActivity() {
                     // something about the lobby has changed, update title and playerlist
                     viewAdapter.update(it.players)
                     game_name.text = it.name
-                    if (it.host == "Things") {
+                    if (it.host == Monopolis.name) {
                         button_start_game.isEnabled = true
                     }
                 }
