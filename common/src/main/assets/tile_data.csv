@@ -5,8 +5,8 @@ Estate,BrownB,Brown,60,4,20,60,180,320,450
 Tax,IncomeTax,Income
 Railroad,RailroadA,Railroad
 Estate,LightBlueA,LightBlue,100,6,30,90,270,400,550
-Estate,LightBlueB,LightBlue,100,6,30,90,270,400,550
 CardDraw,ChanceA,Chance
+Estate,LightBlueB,LightBlue,100,6,30,90,270,400,550
 Estate,LightBlueC,LightBlue,120,8,40,100,300,450,600
 Jail,Jail
 Estate,PinkA,Pink,140,10,50,150,450,625,750
