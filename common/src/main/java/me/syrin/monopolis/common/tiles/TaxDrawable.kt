@@ -5,6 +5,7 @@ import android.graphics.*
 import android.graphics.drawable.Drawable
 import android.util.TypedValue
 import me.syrin.monopolis.common.game.tiles.Tax
+import kotlin.math.abs
 
 class TaxDrawable(val reference: Tax, val rotation: Int) : Drawable() {
     private val blackPaint = Paint().apply {
@@ -27,8 +28,7 @@ class TaxDrawable(val reference: Tax, val rotation: Int) : Drawable() {
         val width = if(rotation % 2 == 0) bounds.width() else bounds.height()
         val height = if(rotation % 2 == 0) bounds.height() else bounds.width()
 
-        // TODO: Work out why 35 is special
-        val offsetWidth = if(rotation % 2 == 0) 0 else 35
+        val offsetWidth = if(rotation % 2 == 0) 0 else (abs(width - height) / 2)
         val offsetHeight = -offsetWidth
 
 
