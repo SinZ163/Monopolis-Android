@@ -10,7 +10,9 @@ class CardDraw(id: String, name: String, val cardType: CardType, val cards: Queu
     override fun onPlayerLand(game: Monopolis, player: Player) {
         // On land, pop card off top of cards
         val card = cards.poll()
-        card.action(game, player)
-        cards.offer(card)
+        card.action(game, player, card)
+        if (card.replaceInDeck) {
+            cards.offer(card)
+        }
     }
 }
