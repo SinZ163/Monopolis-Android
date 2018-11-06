@@ -8,6 +8,7 @@ import kotlinx.android.synthetic.main.activity_pre_game.*
 import me.syrin.monopolis.common.LobbyState
 import me.syrin.monopolis.common.network.LeaveLobbyPacket
 import me.syrin.monopolis.common.network.Monopolis
+import me.syrin.monopolis.common.network.StartLobbyPacket
 import me.syrin.monopolis.common.network.WebSocket
 import org.jetbrains.anko.startActivity
 
@@ -19,15 +20,23 @@ class PreGameActivity : FragmentActivity() {
         val viewManager = LinearLayoutManager(this)
         val viewAdapter = PlayerListAdapter()
 
-        Monopolis.lobby.observe(this, Observer<LobbyState?> {
+        Monopolis.lobby.observe(this, Observer {
             if (it == null) {
+                // lobby doesnt exist anymore, back out
                 onBackPressed()
             }
             else {
-                viewAdapter.update(it.players)
-                game_name.text = it.name
-                if (it.host == "Test") {
-                    button_start_game.isEnabled = true
+                if (it.ingame) {
+                    // game as been started, start game activity
+                    startActivity<GameActivity>()
+                }
+                else {
+                    // something about the lobby has changed, update title and playerlist
+                    viewAdapter.update(it.players)
+                    game_name.text = it.name
+                    if (it.host == "Things") {
+                        button_start_game.isEnabled = true
+                    }
                 }
             }
         })
@@ -38,7 +47,7 @@ class PreGameActivity : FragmentActivity() {
         }
 
         button_start_game.setOnClickListener {
-            startActivity<GameActivity>()
+            WebSocket.send(StartLobbyPacket())
         }
     }
 
