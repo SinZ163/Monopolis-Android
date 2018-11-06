@@ -48,14 +48,14 @@ class MainActivity : FragmentActivity() {
             builder.setTitle("Game setup")
             builder.setView(inputView)
 
-            builder.setPositiveButton("Create") { dialog, which ->
+            builder.setPositiveButton("Create") { _, _ ->
                 // open pregame with passed name and player count
                 val name = inputView.game_name.text.toString()
                 val playerCount = inputView.player_count.value
                 WebSocket.send(CreateLobbyPacket(name, playerCount))
             }
 
-            builder.setNegativeButton("Cancel") { dialog, which ->
+            builder.setNegativeButton("Cancel") { dialog, _ ->
                 // cancel
                 dialog.cancel()
             }
