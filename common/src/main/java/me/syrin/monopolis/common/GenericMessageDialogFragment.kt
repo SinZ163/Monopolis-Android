@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
+import kotlinx.android.synthetic.main.fragment_generic_message_layout.*
 import kotlinx.android.synthetic.main.fragment_generic_message_layout.view.*
 import java.lang.IllegalStateException
 
@@ -18,7 +19,13 @@ class GenericMessageDialogFragment : DialogFragment() {
             myView.text_view_description.text = arguments?.getString("description")
             builder.setView(myView)
 
-            builder.create()
+            val dialog = builder.create()
+
+            myView.button_continue.setOnClickListener {
+                dialog.dismiss()
+            }
+
+            dialog
         } ?: throw IllegalStateException("Activity cannot be null")
     }
 }

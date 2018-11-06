@@ -3,28 +3,32 @@ package me.syrin.monopolis
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
 import kotlinx.android.synthetic.main.activity_game.*
+import me.syrin.monopolis.common.BoardFragment
 import me.syrin.monopolis.common.GenericMessageDialogFragment
 import me.syrin.monopolis.common.game.Monopolis
 
 class GameActivity : FragmentActivity() {
+    lateinit var monopolis: Monopolis
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
 
-        button_test.setOnClickListener {
-            displayGenericMessageDialog("test", "testererereerererewrer")
-        }
+        monopolis = Monopolis(this, listOf("Sam", "Trent"))
 
-        Monopolis(this)
+        (fragment_board as BoardFragment).initialiseBoard(monopolis)
+
+        text_view_temp.text = "${monopolis.players[0].name}: ${tempGetLocName(monopolis.players[0].location)}\n${monopolis.players[1].name}: ${tempGetLocName(monopolis.players[1].location)}"
+
+        button_test.setOnClickListener {
+            // do turn
+            monopolis.doTurn()
+            // update player status
+            text_view_temp.text = "${monopolis.players[0].name}: ${tempGetLocName(monopolis.players[0].location)}\n${monopolis.players[1].name}: ${tempGetLocName(monopolis.players[1].location)}\nRoll: ${monopolis.diceTotal()}"
+        }
     }
 
-    private fun displayGenericMessageDialog(title: String, description: String) {
-        val dialog = GenericMessageDialogFragment()
-        val bundle = Bundle()
-        bundle.putString("title", title)
-        bundle.putString("description", description)
-        dialog.arguments = bundle
-        dialog.show(supportFragmentManager, "test")
+    private fun tempGetLocName(i: Int): String {
+        return monopolis.tiles[i].name
     }
 }

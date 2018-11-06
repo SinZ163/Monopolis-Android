@@ -13,10 +13,21 @@ class Monopolis {
 
         val chatMessages: MutableLiveData<List<ChatMessage>> = MutableLiveData()
 
+        val connected: MutableLiveData<Boolean> = MutableLiveData()
+
         lateinit var name: String
         fun init(newName: String) {
+            connected.value = false
             WebSocket.init(newName)
             name = newName
+            // TODO: change this to listen to a (yet to be created) "connected packet" or listen to the open connection
+            EventBus.subscribe<IPacket>()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe {
+                        if (!connected.value!!) {
+                            connected.value = true
+                        }
+                    }
             EventBus.subscribe<LobbyListPacket>()
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe {
