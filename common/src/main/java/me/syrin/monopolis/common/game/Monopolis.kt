@@ -107,87 +107,87 @@ class Monopolis(val activity: FragmentActivity, playerList: List<String> = listO
     fun getCards(cardType: CardType): MutableList<Card> {
         val cards = when (cardType) {
             CardType.CommunityChest -> mutableListOf(
-                    Card(CardType.CommunityChest, "Advance to Go", "Advance to Go and collect ₩200.") { game, player, card ->
+                    Card(0, CardType.CommunityChest, "Advance to Go", "Advance to Go and collect ₩200.") { game, player, card ->
                         player.advanceTo("Go")
                     },
-                    Card(CardType.CommunityChest, "Bank error in your favor", "Collect ₩200.") { game, player, card ->
+                    Card(1, CardType.CommunityChest, "Bank error in your favor", "Collect ₩200.") { game, player, card ->
                         player.credit(200)
                     },
-                    Card(CardType.CommunityChest, "Doctor's fees", "Pay ₩50.") { game, player, card ->
+                    Card(2, CardType.CommunityChest, "Doctor's fees", "Pay ₩50.") { game, player, card ->
                         player.pay(50, null)
                     },
-                    Card(CardType.CommunityChest, "From sale of stock you get ₩50", "Receive ₩50.") { game, player, card ->
+                    Card(3, CardType.CommunityChest, "From sale of stock you get ₩50", "Receive ₩50.") { game, player, card ->
                         player.credit(50)
                     },
-                    Card(CardType.CommunityChest, "Get Out of Jail Free", "This card may be kept until needed or sold/traded.", false) { game, player, card ->
+                    Card(4, CardType.CommunityChest, "Get Out of Jail Free", "This card may be kept until needed or sold/traded.", false) { game, player, card ->
                         player.jailCards.add(card)
                     },
-                    Card(CardType.CommunityChest, "Go to Jail", "Go directly to jail. Do not pass Go, Do not collect ₩200.") { game, player, card ->
+                    Card(5, CardType.CommunityChest, "Go to Jail", "Go directly to jail. Do not pass Go, Do not collect ₩200.") { game, player, card ->
                         player.sendToJail()
                     },
-                    Card(CardType.CommunityChest, "Grand Opera Night", "Collect ₩50 from every player for opening night seats.") { game, player, card ->
+                    Card(6, CardType.CommunityChest, "Grand Opera Night", "Collect ₩50 from every player for opening night seats.") { game, player, card ->
                         for (p in game.players) {
                             p.pay(50, player)
                         }
                     },
-                    Card(CardType.CommunityChest, "Holiday Fund matures", "Receive ₩100.") { game, player, card ->
+                    Card(7, CardType.CommunityChest, "Holiday Fund matures", "Receive ₩100.") { game, player, card ->
                         player.credit(100)
                     },
-                    Card(CardType.CommunityChest, "Income tax refund", "Collect ₩20.") { game, player, card ->
+                    Card(8, CardType.CommunityChest, "Income tax refund", "Collect ₩20.") { game, player, card ->
                         player.credit(20)
                     },
-                    Card(CardType.CommunityChest, "It is your birthday", "Collect ₩10 from every player.") { game, player, card ->
+                    Card(9, CardType.CommunityChest, "It is your birthday", "Collect ₩10 from every player.") { game, player, card ->
                         for (p in game.players) {
                             p.pay(10, player)
                         }
                     },
-                    Card(CardType.CommunityChest, "Life insurance matures", "Collect ₩100.") { game, player, card ->
+                    Card(10, CardType.CommunityChest, "Life insurance matures", "Collect ₩100.") { game, player, card ->
                         player.credit(100)
                     },
-                    Card(CardType.CommunityChest, "Hospital Fees", "Pay ₩50.") { game, player, card ->
+                    Card(11, CardType.CommunityChest, "Hospital Fees", "Pay ₩50.") { game, player, card ->
                         player.pay(50, null)
                     },
-                    Card(CardType.CommunityChest, "School fees", "Pay ₩50.") { game, player, card ->
+                    Card(12, CardType.CommunityChest, "School fees", "Pay ₩50.") { game, player, card ->
                         player.pay(50, null)
                     },
-                    Card(CardType.CommunityChest, "Receive ₩25 consultancy fee", "Receive ₩25.") { game, player, card ->
+                    Card(13, CardType.CommunityChest, "Receive ₩25 consultancy fee", "Receive ₩25.") { game, player, card ->
                         player.credit(25)
                     },
-                    Card(CardType.CommunityChest, "You are assessed for street repairs", "Pay ₩40 per house and ₩115 per hotel you own.") { game, player, card ->
+                    Card(14, CardType.CommunityChest, "You are assessed for street repairs", "Pay ₩40 per house and ₩115 per hotel you own.") { game, player, card ->
                         // TODO: requires houses and hotels to be implemented
                     },
-                    Card(CardType.CommunityChest, "You have won second prize in a beauty contest", "Collect ₩10.") { game, player, card ->
+                    Card(15, CardType.CommunityChest, "You have won second prize in a beauty contest", "Collect ₩10.") { game, player, card ->
                         player.credit(10)
                     },
-                    Card(CardType.CommunityChest, "You inherit ₩100", "Receive ₩100.") { game, player, card ->
+                    Card(16, CardType.CommunityChest, "You inherit ₩100", "Receive ₩100.") { game, player, card ->
                         player.credit(100)
                     }
             )
             CardType.Chance -> mutableListOf(
-                    Card(CardType.Chance, "Advance to Go", "Advance to Go and collect ₩200.") { game, player, card ->
+                    Card(0, CardType.Chance, "Advance to Go", "Advance to Go and collect ₩200.") { game, player, card ->
                         player.advanceTo("Go")
                     },
-                    Card(CardType.Chance, "Advance to RedC", "If you pass Go, collect ₩200.") { game, player, card ->
+                    Card(1, CardType.Chance, "Advance to RedC", "If you pass Go, collect ₩200.") { game, player, card ->
                         player.advanceTo("RedC")
                     },
-                    Card(CardType.Chance, "Advance to PinkA", "If you pass Go, collect ₩200.") { game, player, card ->
+                    Card(2, CardType.Chance, "Advance to PinkA", "If you pass Go, collect ₩200.") { game, player, card ->
                         player.advanceTo("PinkA")
                     },
-                    Card(CardType.Chance, "Advance to nearest Utility", "If unowned, you may buy it from the Bank. If owned, throw dice and pay owner a total 10 times the amount thrown.") { game, player, card ->
+                    Card(3, CardType.Chance, "Advance to nearest Utility", "If unowned, you may buy it from the Bank. If owned, throw dice and pay owner a total 10 times the amount thrown.") { game, player, card ->
                         rollDice()
                         // TODO: special case, pay 10x regardless
                         player.advanceToNearest(PropertySet.Utility)
                     },
-                    Card(CardType.Chance, "Advance to the nearest Railroad", "If Railroad is unowned, you may buy it from the Bank. If owned, pay owner twice the rental to which he/she is otherwise entitled.") { game, player, card ->
+                    Card(4, CardType.Chance, "Advance to the nearest Railroad", "If Railroad is unowned, you may buy it from the Bank. If owned, pay owner twice the rental to which he/she is otherwise entitled.") { game, player, card ->
                         player.advanceToNearest(PropertySet.Railroad)
                     },
-                    Card(CardType.Chance, "Bank pays you dividend of ₩50", "Receive ₩50") { game, player, card ->
+                    Card(5, CardType.Chance, "Bank pays you dividend of ₩50", "Receive ₩50") { game, player, card ->
                         player.credit(50)
                     },
-                    Card(CardType.Chance, "Get out of Jail Free", "This card may be kept until needed, or traded/sold.", false) { game, player, card ->
+                    Card(6, CardType.Chance, "Get out of Jail Free", "This card may be kept until needed, or traded/sold.", false) { game, player, card ->
                         player.jailCards.add(card)
                     },
-                    Card(CardType.Chance, "Go Back Three Spaces", "Go Back Three Spaces.") { game, player, card ->
+                    Card(7, CardType.Chance, "Go Back Three Spaces", "Go Back Three Spaces.") { game, player, card ->
                         player.location -= 3
                         if (player.location < 0) {
                             // for example -1 (mayfair), which is 39. 40 + -1 = 39
@@ -195,30 +195,30 @@ class Monopolis(val activity: FragmentActivity, playerList: List<String> = listO
                         }
                         game.tiles[player.location].onPlayerLand(game, player)
                     },
-                    Card(CardType.Chance, "Go to Jail", "Go directly to Jail. Do not pass GO, do not collect ₩200.") { game, player, card ->
+                    Card(8, CardType.Chance, "Go to Jail", "Go directly to Jail. Do not pass GO, do not collect ₩200.") { game, player, card ->
                         player.sendToJail()
                     },
-                    Card(CardType.Chance, "Make general repairs on all your property", "For each house pay ₩25, For each hotel pay ₩100.") { game, player, card ->
+                    Card(9, CardType.Chance, "Make general repairs on all your property", "For each house pay ₩25, For each hotel pay ₩100.") { game, player, card ->
                         // TODO: requires houses and hotels to be implemented
                     },
-                    Card(CardType.Chance, "Pay poor tax of ₩15", "Pay ₩15.") { game, player, card ->
+                    Card(10, CardType.Chance, "Pay poor tax of ₩15", "Pay ₩15.") { game, player, card ->
                         player.pay(15, null)
                     },
-                    Card(CardType.Chance, "Take a trip to RailroadA", "If you pass Go, collect ₩200.") { game, player, card ->
+                    Card(11, CardType.Chance, "Take a trip to RailroadA", "If you pass Go, collect ₩200.") { game, player, card ->
                         player.advanceTo("RailroadA")
                     },
-                    Card(CardType.Chance, "Take a walk at DarkBlueB", "Advance token to DarkBlueB") { game, player, card ->
+                    Card(12, CardType.Chance, "Take a walk at DarkBlueB", "Advance token to DarkBlueB") { game, player, card ->
                         player.advanceTo("DarkBlueB")
                     },
-                    Card(CardType.Chance, "You have been elected Chairman of the Board", "Pay each player ₩50.") { game, player, card ->
+                    Card(13, CardType.Chance, "You have been elected Chairman of the Board", "Pay each player ₩50.") { game, player, card ->
                         for (p in game.players) {
                             player.pay(50, p)
                         }
                     },
-                    Card(CardType.Chance, "Your building loan matures", "Receive ₩150.") { game, player, card ->
+                    Card(14, CardType.Chance, "Your building loan matures", "Receive ₩150.") { game, player, card ->
                         player.credit(150)
                     },
-                    Card(CardType.Chance, "You have won a crossword competition", "Collect ₩100.") { game, player, card ->
+                    Card(15, CardType.Chance, "You have won a crossword competition", "Collect ₩100.") { game, player, card ->
                         player.credit(100)
                     }
             )
