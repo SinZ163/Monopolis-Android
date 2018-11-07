@@ -7,6 +7,7 @@ import kotlinx.android.synthetic.main.activity_game.*
 import me.syrin.monopolis.common.BoardFragment
 import me.syrin.monopolis.common.game.Monopolis
 import me.syrin.monopolis.common.network.LeaveLobbyPacket
+import me.syrin.monopolis.common.network.NetworkHandler
 import me.syrin.monopolis.common.network.WebSocket
 
 class GameActivity : AppCompatActivity() {
@@ -40,7 +41,7 @@ class GameActivity : AppCompatActivity() {
 
         builder.setPositiveButton("Leave") { _, _ ->
             // leave game
-            WebSocket.send(LeaveLobbyPacket(me.syrin.monopolis.common.network.Monopolis.lobby.value!!.id))
+            WebSocket.send(LeaveLobbyPacket(NetworkHandler.lobby.value!!.id))
             super.onBackPressed()
         }
 
