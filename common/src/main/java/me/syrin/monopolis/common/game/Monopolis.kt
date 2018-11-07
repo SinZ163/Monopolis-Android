@@ -3,6 +3,7 @@ package me.syrin.monopolis.common.game
 import android.os.Bundle
 import android.preference.PreferenceManager
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.MutableLiveData
 import me.syrin.monopolis.common.GenericMessageDialogFragment
 import me.syrin.monopolis.common.game.cards.Card
 import me.syrin.monopolis.common.game.cards.CardType
@@ -15,6 +16,8 @@ import kotlin.random.Random
 class Monopolis(val activity: FragmentActivity, playerList: List<String> = listOf()) {
     var tiles = listOf<Tile>()
 
+    val uiUpdates: MutableLiveData<Int> = MutableLiveData()
+
     val players = arrayListOf<Player>()
     var currentPlayer = 0
 
@@ -26,9 +29,10 @@ class Monopolis(val activity: FragmentActivity, playerList: List<String> = listO
     fun diceTotal(): Int = diceOneAmount + diceTwoAmount
 
     init {
+        uiUpdates.value = 0
+
         // Read tiles in
         val preferences = PreferenceManager.getDefaultSharedPreferences(activity)
-        // TODO: The default is to save things, in the future cry
         val board = preferences.getString("playerBoard", "uk")
         tiles = readTileDataFromCSV(
                 activity.assets.open("tile_data.csv"),
