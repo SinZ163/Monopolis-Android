@@ -4,7 +4,6 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.preference.PreferenceManager
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AlertDialog
@@ -12,7 +11,7 @@ import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.create_game_dialog.view.*
 import me.syrin.monopolis.common.network.CreateLobbyPacket
-import me.syrin.monopolis.common.network.Monopolis
+import me.syrin.monopolis.common.network.NetworkHandler
 import me.syrin.monopolis.common.network.WebSocket
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.startActivityForResult
@@ -29,10 +28,10 @@ class MainActivity : AppCompatActivity() {
         if (name == null) {
             startActivityForResult<SettingsActivity>(0)
         } else {
-            Monopolis.init(name)
+            NetworkHandler.init(name)
         }
 
-        Monopolis.lobby.observe(this, Observer {
+        NetworkHandler.lobby.observe(this, Observer {
             if (it?.ingame == true) {
                 startActivity<GameActivity>()
             } else if (it != null) {
@@ -79,7 +78,7 @@ class MainActivity : AppCompatActivity() {
             if (name == null) {
                 startActivityForResult<SettingsActivity>(0)
             } else {
-                Monopolis.init(name)
+                NetworkHandler.init(name)
             }
         } else {
             // TODO: Tell server my name changed?

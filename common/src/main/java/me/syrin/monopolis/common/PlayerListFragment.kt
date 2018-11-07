@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 import kotlinx.android.synthetic.main.fragment_player_list.*
 
-import me.syrin.monopolis.common.network.Monopolis
+import me.syrin.monopolis.common.network.NetworkHandler
 
 class PlayerListFragment : Fragment() {
 
@@ -29,7 +29,7 @@ class PlayerListFragment : Fragment() {
         recycler_view_players.adapter = adapter
         recycler_view_players.layoutManager = LinearLayoutManager(view.context)
 
-        Monopolis.lobby.observe(this, Observer<LobbyState?> {
+        NetworkHandler.lobby.observe(this, Observer<LobbyState?> {
             if (it != null) {
                 adapter.update(it.players)
             }

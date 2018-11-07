@@ -5,7 +5,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import me.syrin.monopolis.common.ChatMessage
 import me.syrin.monopolis.common.LobbyState
 
-class Monopolis {
+class NetworkHandler {
     companion object {
         val lobbies: MutableLiveData<Map<Int, Lobby>> = MutableLiveData()
 

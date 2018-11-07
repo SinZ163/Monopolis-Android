@@ -10,7 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_lobby.*
 import me.syrin.monopolis.common.network.Lobby
-import me.syrin.monopolis.common.network.Monopolis
+import me.syrin.monopolis.common.network.NetworkHandler
 
 class LobbyFragment : Fragment() {
 
@@ -25,7 +25,7 @@ class LobbyFragment : Fragment() {
 
         val viewManager = LinearLayoutManager(context)
         val viewAdapter = LobbyGamesAdapter()
-        Monopolis.lobbies.observe(this, Observer<Map<Int, Lobby>> {
+        NetworkHandler.lobbies.observe(this, Observer<Map<Int, Lobby>> {
             Log.i("Debug", "What is $viewAdapter what is $it what is ${it.values}")
             viewAdapter.update(it.values)
         })

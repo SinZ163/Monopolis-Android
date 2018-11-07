@@ -9,8 +9,8 @@ import androidx.fragment.app.FragmentActivity
 import kotlinx.android.synthetic.main.activity_settings.*
 import kotlinx.android.synthetic.main.set_name_dialog.view.*
 import me.syrin.monopolis.common.BoardFragment
-import me.syrin.monopolis.common.network.Monopolis
-import me.syrin.monopolis.common.game.Monopolis as MonopolisGame
+import me.syrin.monopolis.common.game.Monopolis
+import me.syrin.monopolis.common.network.NetworkHandler
 import org.jetbrains.anko.toast
 
 class SettingsActivity : FragmentActivity() {
@@ -93,14 +93,14 @@ class SettingsActivity : FragmentActivity() {
     }
 
     private fun displayBoard() {
-        (fragment_board_preview as BoardFragment).initialiseBoard(MonopolisGame(this))
+        (fragment_board_preview as BoardFragment).initialiseBoard(Monopolis(this))
     }
 
     private fun setName(name: String) {
         preferences.edit().putString("playerName", name).apply()
         displayName(name)
-        if (Monopolis.connected.value != true) {
-            Monopolis.init(preferences.getString("playerName", null) as String)
+        if (NetworkHandler.connected.value != true) {
+            NetworkHandler.init(preferences.getString("playerName", null) as String)
         }
     }
 

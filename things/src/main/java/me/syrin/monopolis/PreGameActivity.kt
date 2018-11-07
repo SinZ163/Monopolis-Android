@@ -5,9 +5,8 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_pre_game.*
-import me.syrin.monopolis.common.LobbyState
 import me.syrin.monopolis.common.network.LeaveLobbyPacket
-import me.syrin.monopolis.common.network.Monopolis
+import me.syrin.monopolis.common.network.NetworkHandler
 import me.syrin.monopolis.common.network.StartLobbyPacket
 import me.syrin.monopolis.common.network.WebSocket
 import org.jetbrains.anko.startActivity
@@ -20,7 +19,7 @@ class PreGameActivity : FragmentActivity() {
         val viewManager = LinearLayoutManager(this)
         val viewAdapter = PlayerListAdapter()
 
-        Monopolis.lobby.observe(this, Observer {
+        NetworkHandler.lobby.observe(this, Observer {
             if (it == null) {
                 // lobby doesnt exist anymore, back out
                 onBackPressed()
@@ -34,7 +33,7 @@ class PreGameActivity : FragmentActivity() {
                     // something about the lobby has changed, update title and playerlist
                     viewAdapter.update(it.players)
                     game_name.text = it.name
-                    if (it.host == Monopolis.name) {
+                    if (it.host == NetworkHandler.name) {
                         button_start_game.isEnabled = true
                     }
                 }
@@ -52,8 +51,8 @@ class PreGameActivity : FragmentActivity() {
     }
 
     override fun onBackPressed() {
-        if (Monopolis.lobby.value != null) {
-            val lobby = Monopolis.lobby.value ?: return super.onBackPressed()
+        if (NetworkHandler.lobby.value != null) {
+            val lobby = NetworkHandler.lobby.value ?: return super.onBackPressed()
             WebSocket.send(LeaveLobbyPacket(lobby.id))
         }
         super.onBackPressed()
