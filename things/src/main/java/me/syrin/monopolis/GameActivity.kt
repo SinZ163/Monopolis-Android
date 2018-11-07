@@ -1,11 +1,14 @@
 package me.syrin.monopolis
 
+import android.app.AlertDialog
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
 import kotlinx.android.synthetic.main.activity_game.*
 import me.syrin.monopolis.common.BoardFragment
 import me.syrin.monopolis.common.GenericMessageDialogFragment
 import me.syrin.monopolis.common.game.Monopolis
+import me.syrin.monopolis.common.network.LeaveLobbyPacket
+import me.syrin.monopolis.common.network.WebSocket
 
 class GameActivity : FragmentActivity() {
     lateinit var monopolis: Monopolis
@@ -30,5 +33,24 @@ class GameActivity : FragmentActivity() {
 
     private fun tempGetLocName(i: Int): String {
         return monopolis.tiles[i].name
+    }
+
+    override fun onBackPressed() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Leave?")
+        builder.setMessage("Are you sure you want to leave this game?")
+
+        builder.setPositiveButton("Leave") { _, _ ->
+            // leave game
+            WebSocket.send(LeaveLobbyPacket(me.syrin.monopolis.common.network.Monopolis.lobby.value!!.id))
+            super.onBackPressed()
+        }
+
+        builder.setNegativeButton("Cancel") { dialog, _ ->
+            // cancel
+            dialog.cancel()
+        }
+
+        builder.show()
     }
 }
