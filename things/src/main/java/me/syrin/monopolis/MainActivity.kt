@@ -4,13 +4,12 @@ import android.app.AlertDialog
 import androidx.fragment.app.FragmentActivity
 import android.os.Bundle
 import android.preference.PreferenceManager
-import android.text.InputType
 import android.view.View
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.create_game_dialog.view.*
 import me.syrin.monopolis.common.network.CreateLobbyPacket
-import me.syrin.monopolis.common.network.Monopolis
+import me.syrin.monopolis.common.network.NetworkHandler
 import me.syrin.monopolis.common.network.WebSocket
 import org.jetbrains.anko.startActivity
 
@@ -27,10 +26,10 @@ class MainActivity : FragmentActivity() {
             startActivity<SettingsActivity>()
         }
         else {
-            Monopolis.init(name)
+            NetworkHandler.init(name)
         }
 
-        Monopolis.connected.observe(this, Observer {
+        NetworkHandler.connected.observe(this, Observer {
             if (it) {
                 // connected
                 linear_layout_loading.visibility = View.GONE
@@ -43,7 +42,7 @@ class MainActivity : FragmentActivity() {
             }
         })
 
-        Monopolis.lobby.observe(this, Observer {
+        NetworkHandler.lobby.observe(this, Observer {
             if (it?.ingame == true) {
                 startActivity<GameActivity>()
             } else if (it != null) {

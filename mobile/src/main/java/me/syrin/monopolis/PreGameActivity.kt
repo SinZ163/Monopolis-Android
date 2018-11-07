@@ -10,7 +10,7 @@ import kotlinx.android.synthetic.main.activity_pre_game.*
 import me.syrin.monopolis.common.ChatFragment
 import me.syrin.monopolis.common.PlayerListFragment
 import me.syrin.monopolis.common.network.LeaveLobbyPacket
-import me.syrin.monopolis.common.network.Monopolis
+import me.syrin.monopolis.common.network.NetworkHandler
 import me.syrin.monopolis.common.network.StartLobbyPacket
 import me.syrin.monopolis.common.network.WebSocket
 import org.jetbrains.anko.startActivity
@@ -25,7 +25,7 @@ class PreGameActivity : AppCompatActivity() {
             WebSocket.send(StartLobbyPacket())
         }
 
-        Monopolis.lobby.observe(this, Observer {
+        NetworkHandler.lobby.observe(this, Observer {
             if (it == null) {
                 onBackPressed()
             }
@@ -36,7 +36,7 @@ class PreGameActivity : AppCompatActivity() {
                     // We are still PreGame
                     actionBar?.title = "Lobby: " + it.name
                     // If I am host, unlock the button
-                    if (it.host == Monopolis.name) {
+                    if (it.host == NetworkHandler.name) {
                         start.isEnabled = true
                     }
                 }
@@ -49,8 +49,8 @@ class PreGameActivity : AppCompatActivity() {
 
     }
     override fun onBackPressed() {
-        if (Monopolis.lobby.value != null) {
-            val lobby = Monopolis.lobby.value ?: return super.onBackPressed()
+        if (NetworkHandler.lobby.value != null) {
+            val lobby = NetworkHandler.lobby.value ?: return super.onBackPressed()
             WebSocket.send(LeaveLobbyPacket(lobby.id))
         }
         super.onBackPressed()
