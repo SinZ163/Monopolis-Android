@@ -3,33 +3,53 @@ package me.syrin.monopolis
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.app.AlertDialog
+import android.content.SharedPreferences
 import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.FragmentActivity
 import kotlinx.android.synthetic.main.activity_settings.*
 import kotlinx.android.synthetic.main.set_name_dialog.view.*
+import me.syrin.monopolis.common.BoardFragment
 import me.syrin.monopolis.common.network.Monopolis
+import me.syrin.monopolis.common.game.Monopolis as MonopolisGame
 import org.jetbrains.anko.toast
 
 class SettingsActivity : FragmentActivity() {
+
+    lateinit var preferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
-        // Set click event for button (dialog)
+        preferences = PreferenceManager.getDefaultSharedPreferences(this)
+
+        // Set click event for change name button (dialog)
         button_change_name.setOnClickListener {
             displaySetNameDialog()
         }
 
-        // Pull name from sharedprefs and populate field
-        val preferences = PreferenceManager.getDefaultSharedPreferences(this)
-        val name = preferences.getString("player_name", null)
+        // Set click event for uk and us buttons
+        button_uk_board.setOnClickListener {
+            setBoard("uk")
+        }
+        button_us_board.setOnClickListener {
+            setBoard("us")
+        }
+
+
+        // Pull name and board from sharedprefs and populate fields
+        val name = preferences.getString("playerName", null)
+        val board = preferences.getString("playerBoard", "uk")
+
+        // Initialise board
+        setBoard(board)
+        displayBoard()
+
         if (name != null) {
-            text_view_name.text = name
+            displayName(name)
         }
         else {
             displaySetNameDialog()
-            Monopolis.init(preferences.getString("player_name", null) as String)
         }
     }
 
@@ -67,16 +87,30 @@ class SettingsActivity : FragmentActivity() {
         dialog.show()
     }
 
+    private fun setBoard(boardId: String) {
+        preferences.edit().putString("playerBoard", boardId).apply()
+        displayBoard()
+    }
+
+    private fun displayBoard() {
+        (fragment_board_preview as BoardFragment).initialiseBoard(MonopolisGame(this))
+    }
+
     private fun setName(name: String) {
-        val preferences = PreferenceManager.getDefaultSharedPreferences(this)
-        preferences.edit().putString("player_name", name).apply()
+        preferences.edit().putString("playerName", name).apply()
+        displayName(name)
+        if (Monopolis.connected.value != true) {
+            Monopolis.init(preferences.getString("playerName", null) as String)
+        }
+    }
+
+    private fun displayName(name: String) {
         text_view_name.text = name
     }
 
     override fun onBackPressed() {
         // Check if name set, if not, dont allow leave
-        val preferences = PreferenceManager.getDefaultSharedPreferences(this)
-        val name = preferences.getString("player_name", null)
+        val name = preferences.getString("playerName", null)
         if (name == null) {
             toast("Please set a player name")
             return

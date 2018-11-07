@@ -22,7 +22,7 @@ class MainActivity : FragmentActivity() {
 
         // Check if name is set, if not, send to settings
         val preferences = PreferenceManager.getDefaultSharedPreferences(this)
-        val name = preferences.getString("player_name", null)
+        val name = preferences.getString("playerName", null)
         if (name == null) {
             startActivity<SettingsActivity>()
         }
