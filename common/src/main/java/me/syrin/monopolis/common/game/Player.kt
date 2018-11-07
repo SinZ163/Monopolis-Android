@@ -48,6 +48,9 @@ class Player(val game: Monopolis, val name: String) {
     }
 
     fun moveForward(numSpaces: Int) {
+        if (location + numSpaces >= game.tiles.count()) {
+            credit(200)
+        }
         location = ((location + numSpaces) % game.tiles.count())
         game.tiles[location].onPlayerLand(game, this)
     }
@@ -58,6 +61,7 @@ class Player(val game: Monopolis, val name: String) {
             credit(200)
         }
         location = targetIndex
+        game.tiles[location].onPlayerLand(game, this)
     }
     fun advanceTo(targetId: String) {
         advanceTo(game.tiles.indexOfFirst { tile -> tile.id == targetId })

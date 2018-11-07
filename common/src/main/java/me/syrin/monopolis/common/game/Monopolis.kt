@@ -1,6 +1,7 @@
 package me.syrin.monopolis.common.game
 
 import android.os.Bundle
+import android.preference.PreferenceManager
 import androidx.fragment.app.FragmentActivity
 import me.syrin.monopolis.common.GenericMessageDialogFragment
 import me.syrin.monopolis.common.game.cards.Card
@@ -26,9 +27,12 @@ class Monopolis(val activity: FragmentActivity, playerList: List<String> = listO
 
     init {
         // Read tiles in
+        val preferences = PreferenceManager.getDefaultSharedPreferences(activity)
+        // TODO: The default is to save things, in the future cry
+        val board = preferences.getString("playerBoard", "uk")
         tiles = readTileDataFromCSV(
                 activity.assets.open("tile_data.csv"),
-                activity.assets.open("tile_names/uk.csv")
+                activity.assets.open("tile_names/$board.csv")
         )
 
         for (name in playerList) {

@@ -27,23 +27,26 @@ class BoardFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_board, container, false)
 
     }
+    fun updateTile(tile:Tile, index: Int) {
+        val tileImageID = resources.getIdentifier("tile$index", "id", activity!!.packageName)
+        val tileImage = view!!.findViewById(tileImageID) as ImageView
+        tileImage.setImageDrawable(when(tile) {
+            is Go -> resources.getDrawable(R.drawable.go, null)
+            is Jail -> resources.getDrawable(R.drawable.jail, null)
+            is FreeParking -> resources.getDrawable(R.drawable.freeparking, null)
+            is GoToJail -> resources.getDrawable(R.drawable.gotojail, null)
+            is Estate -> EstateDrawable(tile, index / 10)
+            is Railroad -> PropertyDrawable(tile, index / 10)
+            is Utility -> PropertyDrawable(tile, index / 10)
+            is CardDraw -> CardDrawDrawable(tile, index / 10)
+            is Tax -> TaxDrawable(tile, index / 10)
+            else -> null
+        })
+    }
 
     fun initialiseBoard(monopolis: Monopolis) {
         monopolis.tiles.forEachIndexed { index, tile ->
-            val tileImageID = resources.getIdentifier("tile$index", "id", activity!!.packageName)
-            val tileImage = view!!.findViewById(tileImageID) as ImageView
-            tileImage.setImageDrawable(when(tile) {
-                is Go -> resources.getDrawable(R.drawable.go, null)
-                is Jail -> resources.getDrawable(R.drawable.jail, null)
-                is FreeParking -> resources.getDrawable(R.drawable.freeparking, null)
-                is GoToJail -> resources.getDrawable(R.drawable.gotojail, null)
-                is Estate -> EstateDrawable(tile, index / 10)
-                is Railroad -> PropertyDrawable(tile, index / 10)
-                is Utility -> PropertyDrawable(tile, index / 10)
-                is CardDraw -> CardDrawDrawable(tile, index / 10)
-                is Tax -> TaxDrawable(tile, index / 10)
-                else -> null
-            })
+            updateTile(tile, index)
         }
     }
 }

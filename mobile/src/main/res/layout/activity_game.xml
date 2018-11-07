@@ -11,9 +11,19 @@
         android:layout_height="wrap_content"
         android:text="I am a game"/>
 
+    <TextView
+        android:id="@+id/text_view_temp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <Button
+        android:id="@+id/button_test"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Temp"/>
     <fragment
         android:id="@+id/fragment2"
         android:name="me.syrin.monopolis.common.BoardFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
 </LinearLayout>
