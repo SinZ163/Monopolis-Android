@@ -174,6 +174,8 @@ class Monopolis(val activity: FragmentActivity, playerList: List<String> = listO
                         player.advanceTo("PinkA")
                     },
                     Card(CardType.Chance, "Advance to nearest Utility", "If unowned, you may buy it from the Bank. If owned, throw dice and pay owner a total 10 times the amount thrown.") { game, player, card ->
+                        rollDice()
+                        // TODO: special case, pay 10x regardless
                         player.advanceToNearest(PropertySet.Utility)
                     },
                     Card(CardType.Chance, "Advance to the nearest Railroad", "If Railroad is unowned, you may buy it from the Bank. If owned, pay owner twice the rental to which he/she is otherwise entitled.") { game, player, card ->

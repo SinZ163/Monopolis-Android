@@ -10,12 +10,6 @@ class Utility(id: String, name: String) : Property(id, name, PropertySet.Utility
         chargeAmount(game, player, game.diceTotal())
     }
 
-    fun chargeWithNewRoll(game: Monopolis, player: Player) {
-        // Generate dice rolls and pay
-        val baseAmount = Random.nextInt(1, 7) + Random.nextInt(1, 7)
-        chargeAmount(game, player, baseAmount)
-    }
-
     fun chargeAmount(game: Monopolis, player: Player, baseAmount: Int) {
         // If owned by another player with monopoly on utilities, pay 10x base amount
         // TODO: this
