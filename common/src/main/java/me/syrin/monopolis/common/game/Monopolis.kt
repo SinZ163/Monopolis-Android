@@ -73,14 +73,14 @@ class Monopolis(val activity: FragmentActivity, playerList: List<String> = listO
                         WebSocket.send(PlayerRollPacket(player.name, Random.nextInt(1,7), Random.nextInt(1,7)))
                     }
                     is PlayerRollPacket -> {
+                        val player: Player = playerMap[packet.playerName]!!
                         if (isUtilityCard) {
                             // TODO: Figure out how utility logic works
                             isUtilityCard = false
-                            endTurn()
+                            endTurn(player)
                             continue@loop
                         }
                         // Implicit else
-                        val player: Player = playerMap[packet.playerName]!!
                         if (tiles[player.location].name == "Jail" && player.jailed) {
                             player.remainingJailRolls--
                             if (diceOneAmount == diceTwoAmount) {
@@ -91,7 +91,7 @@ class Monopolis(val activity: FragmentActivity, playerList: List<String> = listO
                             }
                             player.moveForward(packet.dice1 + packet.dice2)
                         } else {
-                            if (diceOneAmount == diceTwoAmount) {
+                            if (packet.dice1 == packet.dice2) {
                                 // rolled a double
                                 if (rollJailCount >= 2) {
                                     // this is the third double! jail time
@@ -102,7 +102,7 @@ class Monopolis(val activity: FragmentActivity, playerList: List<String> = listO
                                     // double! move and roll again
                                     player.moveForward(packet.dice1 + packet.dice2)
                                     rollJailCount += 1
-                                    normalRoll(player, rollJailCount + 1)
+                                    //normalRoll(player, rollJailCount + 1)
                                 }
                             }
 
@@ -138,10 +138,14 @@ class Monopolis(val activity: FragmentActivity, playerList: List<String> = listO
             }
         })
     }
-    fun endTurn() {
-        val currentPlayer = ((currentPlayer + 1) % players.count())
-        val player = players[currentPlayer]
-        WebSocket.send(TurnStartPacket(player.name))
+    fun endTurn(player:Player) {
+        if (endTurn) {
+            val currentPlayer = ((currentPlayer + 1) % players.count())
+            val newPlayer = players[currentPlayer]
+            WebSocket.send(TurnStartPacket(newPlayer.name))
+        } else {
+            WebSocket.send(PlayerRollPacket(player.name, Random.nextInt(1,7), Random.nextInt(1,7)))
+        }
     }
 
     fun displayGenericMessageDialog(title: String, description: String) {
