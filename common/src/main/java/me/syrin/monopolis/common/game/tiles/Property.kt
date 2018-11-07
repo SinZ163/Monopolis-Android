@@ -19,6 +19,10 @@ abstract class Property(id: String, name: String, val propertySet: PropertySet, 
 
     abstract fun chargePlayer(game: Monopolis, player: Player)
 
+    fun purchase(player: Player) {
+        player.pay(price, null)
+        owner = player
+    }
     fun mortgage() {
         // Change mortgage status and credit player
         if (mortgaged) return

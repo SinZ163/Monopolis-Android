@@ -4,10 +4,13 @@ import android.os.Bundle
 import android.preference.PreferenceManager
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import me.syrin.monopolis.common.GenericMessageDialogFragment
 import me.syrin.monopolis.common.game.cards.Card
 import me.syrin.monopolis.common.game.cards.CardType
 import me.syrin.monopolis.common.game.tiles.*
+import me.syrin.monopolis.common.network.*
+import org.jetbrains.anko.toast
 import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader
@@ -19,6 +22,7 @@ class Monopolis(val activity: FragmentActivity, playerList: List<String> = listO
     val uiUpdates: MutableLiveData<Int> = MutableLiveData()
 
     val players = arrayListOf<Player>()
+    var playerMap: Map<String, Player> = mapOf()
     var currentPlayer = 0
 
     val communityChestCards = getCards(CardType.CommunityChest)
@@ -26,7 +30,14 @@ class Monopolis(val activity: FragmentActivity, playerList: List<String> = listO
 
     var diceOneAmount: Int = 0  // Set each turn
     var diceTwoAmount: Int = 0  // Set each turn
+    var rollJailCount: Int = 0
     fun diceTotal(): Int = diceOneAmount + diceTwoAmount
+
+    var isUtilityCard: Boolean = false
+
+    var endTurn: Boolean = true
+
+    var nextPacket = 0
 
     init {
         uiUpdates.value = 0
@@ -40,8 +51,97 @@ class Monopolis(val activity: FragmentActivity, playerList: List<String> = listO
         )
 
         for (name in playerList) {
-            players.add(Player(this, name))
+            val player = Player(this, name)
+            players.add(player)
+            playerMap = playerMap.plus(Pair(name, player))
         }
+    }
+
+    fun start() {
+        NetworkHandler.packets.observe(activity, Observer {
+            loop@ while(nextPacket < it.size) {
+                val packet = it[nextPacket]
+                when(packet) {
+                    is TurnStartPacket -> {
+                        activity.toast("${packet.playerName}'s turn now!")
+                        // Cleanup variables from previous turns state
+                        rollJailCount = 0
+                        endTurn = true
+                        // TODO: Disable UI if not our turn
+                        // TODO: Replace this with UI
+                        val player: Player = playerMap[packet.playerName]!!
+                        WebSocket.send(PlayerRollPacket(player.name, Random.nextInt(1,7), Random.nextInt(1,7)))
+                    }
+                    is PlayerRollPacket -> {
+                        if (isUtilityCard) {
+                            // TODO: Figure out how utility logic works
+                            isUtilityCard = false
+                            endTurn()
+                            continue@loop
+                        }
+                        // Implicit else
+                        val player: Player = playerMap[packet.playerName]!!
+                        if (tiles[player.location].name == "Jail" && player.jailed) {
+                            player.remainingJailRolls--
+                            if (diceOneAmount == diceTwoAmount) {
+                                // Free from jail
+                                player.freeFromJail()
+                            } else {
+                                player.payBail()
+                            }
+                            player.moveForward(packet.dice1 + packet.dice2)
+                        } else {
+                            if (diceOneAmount == diceTwoAmount) {
+                                // rolled a double
+                                if (rollJailCount >= 2) {
+                                    // this is the third double! jail time
+                                    WebSocket.send(JailedPacket(player.name))
+                                    continue@loop
+                                } else {
+                                    endTurn = false
+                                    // double! move and roll again
+                                    player.moveForward(packet.dice1 + packet.dice2)
+                                    rollJailCount += 1
+                                    normalRoll(player, rollJailCount + 1)
+                                }
+                            }
+
+                            player.moveForward(packet.dice1 + packet.dice2)
+                        }
+                    }
+                    is JailedPacket -> {
+                        val player: Player = playerMap[packet.playerName]!!
+                        player.sendToJail()
+                    }
+                    is PurchasePropertyPacket -> {
+                        val player = playerMap[packet.playerName]!!
+                        val property = tiles[packet.tile] as Property
+                        property.purchase(player)
+                    }
+                    is PayPersonPacket -> {
+                        val sender = playerMap[packet.sender]!!
+                        val receiver = playerMap[packet.receiver]
+
+                        // TODO: Make sure this is the real deal
+                        sender.pay(packet.amount, receiver)
+                    }
+                    is GainMoneyPacket -> {
+                        val player = playerMap[packet.playerName]!!
+                        // TODO: Make sure this is the real deal
+                        player.credit(packet.amount)
+                    }
+                    is CardDrawPacket -> {
+                        // TODO: do lookup stuff and apply
+                    }
+                }
+                nextPacket += 1
+            }
+        })
+    }
+    fun endTurn() {
+        val currentPlayer = ((currentPlayer + 1) % players.count())
+        val player = players[currentPlayer]
+        WebSocket.send(TurnStartPacket(player.name))
     }
 
     fun displayGenericMessageDialog(title: String, description: String) {

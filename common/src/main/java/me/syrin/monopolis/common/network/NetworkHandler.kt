@@ -1,5 +1,6 @@
 package me.syrin.monopolis.common.network
 
+import android.annotation.SuppressLint
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.android.schedulers.AndroidSchedulers
 import me.syrin.monopolis.common.ChatMessage
@@ -15,7 +16,11 @@ class NetworkHandler {
 
         val connected: MutableLiveData<Boolean> = MutableLiveData()
 
+        val packets: MutableLiveData<List<GamePacket>> = MutableLiveData()
+
         lateinit var name: String
+
+        @SuppressLint("CheckResult")
         fun init(newName: String) {
             connected.value = false
             WebSocket.init(newName)
@@ -48,6 +53,7 @@ class NetworkHandler {
                         if (it.lobbyID == lobby.value?.id) {
                             lobby.value = null
                             chatMessages.value = listOf()
+                            packets.value = listOf()
                         }
                     }
             EventBus.subscribe<LobbyInfoPacket>()
@@ -62,6 +68,14 @@ class NetworkHandler {
                             chatMessages.value = listOf()
                         }
                         chatMessages.value = chatMessages.value?.plus(ChatMessage(it.message, it.author))
+                    }
+            EventBus.subscribe<GamePacket>()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe {
+                        if (packets.value == null) {
+                            packets.value = listOf()
+                        }
+                        packets.value = packets.value?.plus(it)
                     }
         }
     }
