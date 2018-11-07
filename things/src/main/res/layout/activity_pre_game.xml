@@ -24,8 +24,19 @@
             android:scrollbars="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:layout_margin="20dp"
             android:padding="20dp" />
+
+        <Button
+            android:id="@+id/button_start_game"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:layout_gravity="center"
+            android:enabled="false"
+            android:textSize="30sp"
+            android:text="@string/button_start_game" />
 
     </LinearLayout>
 
@@ -33,10 +44,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/game_name"
@@ -46,18 +53,6 @@
                 android:layout_gravity="center"
                 android:textSize="50sp"
                 android:text="Test's game" />
-
-            <Button
-                android:id="@+id/button_start_game"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="20dp"
-                android:layout_gravity="center"
-                android:enabled="false"
-                android:textSize="30sp"
-                android:text="@string/button_start_game" />
-
-        </LinearLayout>
 
         <fragment
             android:id="@+id/fragment_chat"
