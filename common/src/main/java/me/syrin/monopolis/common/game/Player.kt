@@ -47,14 +47,6 @@ class Player(val game: Monopolis, val name: String) {
         freeFromJail()
     }
 
-    fun moveForward(numSpaces: Int) {
-        if (location + numSpaces >= game.tiles.count()) {
-            credit(200)
-        }
-        location = ((location + numSpaces) % game.tiles.count())
-        game.tiles[location].onPlayerLand(game, this)
-    }
-
     fun advanceTo(targetIndex: Int) {
         if (targetIndex < location) {
             // player passed go
@@ -78,5 +70,9 @@ class Player(val game: Monopolis, val name: String) {
                 return
             }
         }
+    }
+
+    fun moveForward(numSpaces: Int) {
+        advanceTo((location + numSpaces) % game.tiles.count())
     }
 }
