@@ -1,6 +1,7 @@
 package me.syrin.monopolis
 
 import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
@@ -11,6 +12,9 @@ import me.syrin.monopolis.common.game.Monopolis
 import me.syrin.monopolis.common.network.LeaveLobbyPacket
 import me.syrin.monopolis.common.network.NetworkHandler
 import me.syrin.monopolis.common.network.WebSocket
+import org.jetbrains.anko.clearTop
+import org.jetbrains.anko.intentFor
+import org.jetbrains.anko.startActivity
 
 class GameActivity : FragmentActivity() {
     lateinit var monopolis: Monopolis
@@ -35,6 +39,13 @@ class GameActivity : FragmentActivity() {
         monopolis.uiUpdates.observe(this, Observer {
             updateUi()
         })
+
+        NetworkHandler.lobby.observe(this, Observer {
+            if (it == null)
+            {
+                startActivity(intentFor<MainActivity>().clearTop())
+            }
+        })
     }
 
     private fun updateUi() {
@@ -53,7 +64,6 @@ class GameActivity : FragmentActivity() {
         builder.setPositiveButton("Leave") { _, _ ->
             // leave game
             WebSocket.send(LeaveLobbyPacket(NetworkHandler.lobby.value!!.id))
-            super.onBackPressed()
         }
 
         builder.setNegativeButton("Cancel") { dialog, _ ->

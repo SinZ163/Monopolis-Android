@@ -12,28 +12,12 @@ import me.syrin.monopolis.common.network.WebSocket
 import org.jetbrains.anko.startActivity
 
 class PreGameActivity : FragmentActivity() {
-    lateinit var viewManager: LinearLayoutManager
-    lateinit var viewAdapter: PlayerListAdapter
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pre_game)
 
-        viewManager = LinearLayoutManager(this)
-        viewAdapter = PlayerListAdapter()
-
-        recycler_view_players.apply {
-            layoutManager = viewManager
-            adapter = viewAdapter
-        }
-
-        button_start_game.setOnClickListener {
-            WebSocket.send(StartLobbyPacket())
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
+        val viewManager = LinearLayoutManager(this)
+        val viewAdapter = PlayerListAdapter()
 
         NetworkHandler.lobby.observe(this, Observer {
             if (it == null) {
@@ -55,6 +39,15 @@ class PreGameActivity : FragmentActivity() {
                 }
             }
         })
+
+        recycler_view_players.apply {
+            layoutManager = viewManager
+            adapter = viewAdapter
+        }
+
+        button_start_game.setOnClickListener {
+            WebSocket.send(StartLobbyPacket())
+        }
     }
 
     override fun onBackPressed() {
