@@ -23,7 +23,7 @@ class Monopolis(val activity: FragmentActivity, playerList: List<String> = listO
     var tiles = listOf<Tile>()
 
     val uiUpdates: MutableLiveData<Int> = MutableLiveData()
-    fun updateUI() {uiUpdates.value = uiUpdates.value?:0 + 1}
+    fun updateUI() { uiUpdates.value = uiUpdates.value?:0 + 1 }
 
     val players = arrayListOf<Player>()
     var playerMap: Map<String, Player> = mapOf()
@@ -49,7 +49,8 @@ class Monopolis(val activity: FragmentActivity, playerList: List<String> = listO
         RollDice,
         Landed,
         LandedDoubles,
-        EndTurn
+        EndTurn,
+        BailRequired
     }
 
     init {
@@ -106,15 +107,13 @@ class Monopolis(val activity: FragmentActivity, playerList: List<String> = listO
                             isUtilityCard = false
                             // TODO: special case, pay 10x regardless
                             player.advanceToNearest(PropertySet.Utility)
-                        } else if (tiles[player.location].name == "Jail" && player.jailed) {
+                        } else if (tiles[player.location].id == "Jail" && player.jailed) {
                             player.remainingJailRolls--
                             if (diceOneAmount == diceTwoAmount) {
                                 // Free from jail
                                 player.freeFromJail()
-                            } else if(player.remainingJailRolls <= 0) {
-                                // TODO: Prompt user to press the pay bail or GOOJF card
-                                player.payBail()
-                                player.moveForward(packet.dice1 + packet.dice2)
+                            } else if (player.remainingJailRolls <= 0) {
+                                turnState = TurnState.BailRequired
                             } else {
                                 endTurn()
                             }

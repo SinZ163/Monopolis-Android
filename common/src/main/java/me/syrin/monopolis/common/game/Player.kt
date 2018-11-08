@@ -2,6 +2,7 @@ package me.syrin.monopolis.common.game
 
 import android.util.Log
 import me.syrin.monopolis.common.game.cards.Card
+import me.syrin.monopolis.common.game.cards.CardType
 import me.syrin.monopolis.common.game.tiles.Property
 import me.syrin.monopolis.common.game.tiles.PropertySet
 import me.syrin.monopolis.common.network.*
@@ -59,6 +60,17 @@ class Player(val game: Monopolis, val name: String) {
     fun payBail() {
         pay(50, null)
         freeFromJail()
+    }
+
+    fun useJailCard() {
+        if (jailCards.count() > 0) {
+            val card = jailCards.removeAt(0)
+            when (card.cardType) {
+                CardType.CommunityChest -> game.communityChestCards.add(card)
+                CardType.Chance -> game.chanceCards.add(card)
+            }
+            freeFromJail()
+        }
     }
 
     fun advanceTo(targetIndex: Int) {

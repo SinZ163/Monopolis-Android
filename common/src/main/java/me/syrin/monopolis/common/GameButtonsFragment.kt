@@ -5,10 +5,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.fragment_game_buttons.*
 import me.syrin.monopolis.common.game.Monopolis
 import me.syrin.monopolis.common.network.NetworkHandler
+import me.syrin.monopolis.common.network.PayBailPacket
+import me.syrin.monopolis.common.network.UseJailCardPacket
 
 class GameButtonsFragment : Fragment() {
 
@@ -30,10 +31,12 @@ class GameButtonsFragment : Fragment() {
             }
         }
         button_pay_bail.setOnClickListener {
-            // TODO: pay bail
+            game.players[game.currentPlayer].payBail()
+            game.send(PayBailPacket(game.players[game.currentPlayer].name))
         }
         button_use_jail_card.setOnClickListener {
-            // TODO: jail card
+            game.players[game.currentPlayer].useJailCard()
+            game.send(UseJailCardPacket(game.players[game.currentPlayer].name))
         }
         button_trade.setOnClickListener {
             // TODO: open trade dialog
@@ -51,6 +54,7 @@ class GameButtonsFragment : Fragment() {
             when (game.turnState) {
                 Monopolis.TurnState.RollDice -> if (game.players[game.currentPlayer].jailed) displayJailTurn() else displayNormalTurn()
                 Monopolis.TurnState.EndTurn -> displayEndTurn()
+                Monopolis.TurnState.BailRequired -> displayJailTurn(true)
             }
         }
         else {
@@ -60,30 +64,40 @@ class GameButtonsFragment : Fragment() {
     }
 
     fun displayNormalTurn() {
-        // show roll dice
-        button_property_management.isEnabled = true
-        button_roll_dice_end_turn.isEnabled = true
         button_roll_dice_end_turn.text = "Roll dice"
-//        button_trade.isEnabled = true
+
+        // show roll dice
+        button_roll_dice_end_turn.isEnabled = true
+
+        // property management and trading always enabled
+        button_property_management.isEnabled = true
+//        button_trade.isEnabled = true     // TODO: trading
 
         // hide jail
         button_pay_bail.visibility = View.GONE
         button_use_jail_card.visibility = View.GONE
     }
 
-    fun displayJailTurn() {
-        // show roll dice
+    fun displayJailTurn(bailRequired: Boolean = false) {
+        button_roll_dice_end_turn.text = "Roll dice"
+
+        // check if jailcards or
         if (game.players[game.currentPlayer].jailCards.count() > 0) {
             button_use_jail_card.isEnabled = true
         }
-        if (game.players[game.currentPlayer].remainingJailRolls > 0) {
+
+        // if bail isn't required this turn
+        if (!bailRequired) {
+            // show roll dice
             button_roll_dice_end_turn.isEnabled = true
         }
+
         button_pay_bail.isEnabled = true
+
+        // property management and trading always enabled
         button_property_management.isEnabled = true
-//        button_trade.isEnabled = true
-        button_roll_dice_end_turn.text = "Roll dice"
-        // TODO: remaining rolls check
+//        button_trade.isEnabled = true     // TODO: trading
+
 
         // show jail
         button_pay_bail.visibility = View.VISIBLE
@@ -91,8 +105,8 @@ class GameButtonsFragment : Fragment() {
     }
 
     fun displayEndTurn() {
-        button_roll_dice_end_turn.isEnabled = true
         button_roll_dice_end_turn.text = "End turn"
+        button_roll_dice_end_turn.isEnabled = true
     }
 
     fun disableButtons() {
