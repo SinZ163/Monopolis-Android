@@ -66,6 +66,11 @@ class EstateDrawable(val reference: Estate, val rotation: Int) : Drawable() {
         }
 
         canvas.drawText("₩${reference.price}", offsetWidth + 0.5f*width, offsetHeight + 0.95f*height, textPaint)
+        val owner = reference.owner
+        if (owner != null) {
+            val paint = Paint().apply { setARGB(180,owner.colour[0], owner.colour[1], owner.colour[2]) }
+            canvas.drawRect(offsetWidth.toFloat() + 1, offsetHeight + 0.95f*height, offsetWidth + width.toFloat() - 1, offsetHeight + height.toFloat() - 1, paint)
+        }
 
         Log.i("EstateDrawable", "$rotation, $offsetWidth + width, $offsetHeight + height")
     }

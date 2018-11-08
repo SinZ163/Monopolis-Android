@@ -5,4 +5,5 @@
     <color name="colorAccent">#FF4081</color>
     <color name="primary_dark_material_light">#c82b2b</color>
     <color name="background_material_light">#eb1b1b</color>
+    <color name="boardBackground">#CEE6D0</color>
 </resources>

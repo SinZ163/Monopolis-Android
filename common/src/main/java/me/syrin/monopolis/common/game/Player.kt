@@ -7,7 +7,7 @@ import me.syrin.monopolis.common.game.tiles.Property
 import me.syrin.monopolis.common.game.tiles.PropertySet
 import me.syrin.monopolis.common.network.*
 
-class Player(val game: Monopolis, val name: String) {
+class Player(val game: Monopolis, val name: String, val colour: List<Int> = listOf(0,0,0)) {
     var balance: Int = 1500 // Start with $1500
     var location: Int = 0   // Start at Go
     var jailed: Boolean = false

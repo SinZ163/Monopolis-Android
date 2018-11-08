@@ -50,6 +50,11 @@ class PropertyDrawable(val reference: Property, val rotation: Int) : Drawable() 
         // TODO: Draw image for Utility / Railroad
 
         canvas.drawText("₩${reference.price}", offsetWidth + 0.5f*width, offsetHeight + 0.95f*height, textPaint)
+        val owner = reference.owner
+        if (owner != null) {
+            val paint = Paint().apply { setARGB(180,owner.colour[0], owner.colour[1], owner.colour[2]) }
+            canvas.drawRect(offsetWidth.toFloat() + 1, offsetHeight + 0.95f*height, offsetWidth + width.toFloat() - 1, offsetHeight + height.toFloat() - 1, paint)
+        }
     }
 
     override fun setAlpha(alpha: Int) {
