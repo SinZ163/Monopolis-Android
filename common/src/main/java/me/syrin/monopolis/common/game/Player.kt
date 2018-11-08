@@ -61,10 +61,12 @@ class Player(val game: Monopolis, val name: String, val colour: List<Int> = list
         location = game.tiles.indexOfFirst { tile -> tile.id == "Jail" }
         jailed = true
         remainingJailRolls = 3
+        game.turnState = Monopolis.TurnState.EndTurn
     }
 
     fun freeFromJail() {
         jailed = false
+        game.turnState = Monopolis.TurnState.RollDice
     }
 
     fun payBail() {
