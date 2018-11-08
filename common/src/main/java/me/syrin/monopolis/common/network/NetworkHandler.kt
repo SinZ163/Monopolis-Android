@@ -95,13 +95,28 @@ class NetworkHandler {
                         }
                         chatMessages.value = chatMessages.value?.plus(ChatMessage(it.message, it.author))
                     }
+            EventBus.subscribe<PlaybackStartPacket>()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe {
+                        playback = true
+                    }
+            EventBus.subscribe<PlaybackEndPacket>()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe {
+                        playback = false
+                        packets.value = packets.value?.plus(playbackPackets)
+                        playbackPackets = arrayListOf()
+                    }
             EventBus.subscribe<GamePacket>()
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe {
                         if (packets.value == null) {
                             packets.value = listOf()
                         }
-                        packets.value = packets.value?.plus(it)
+                        if (!playback)
+                            packets.value = packets.value?.plus(it)
+                        else
+                            playbackPackets.add(it)
                     }
         }
     }

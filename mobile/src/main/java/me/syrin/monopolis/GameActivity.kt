@@ -31,6 +31,14 @@ class GameActivity : AppCompatActivity() {
             updateUi()
         })
 
+        button_roll.setOnClickListener {
+            monopolis.rollDicePressed()
+        }
+        button_end.setOnClickListener {
+            monopolis.endTurnPressed()
+        }
+
+        monopolis.start()
 
         NetworkHandler.connected.observe(this, Observer {
             Log.i("GameActivity", "We are being told to evacuate?")
@@ -49,6 +57,11 @@ class GameActivity : AppCompatActivity() {
 
     private fun updateUi() {
         // TODO: update UI
+        button_roll.isEnabled = monopolis.turnState == Monopolis.TurnState.RollDice
+        button_end.isEnabled = monopolis.turnState == Monopolis.TurnState.EndTurn
+        dice1.text = "Dice1: ${monopolis.diceOneAmount}"
+        dice2.text = "Dice1: ${monopolis.diceTwoAmount}"
+        text_view_temp.text = "${monopolis.players[0].name}: ${tempGetLocName(monopolis.players[0].location)} ${monopolis.players[0].balance}   \n${monopolis.players[1].name}: ${tempGetLocName(monopolis.players[1].location)} ${monopolis.players[1].balance}\nRoll: ${monopolis.diceTotal()}"
     }
 
     override fun onBackPressed() {

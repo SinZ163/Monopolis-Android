@@ -47,7 +47,7 @@ data class LobbyInfoPacket(val id: Int, val name: String, val ingame: Boolean, v
 
 // 9
 @Serializable
-class StartLobbyPacket() : IPacket
+class StartLobbyPacket : IPacket
 
 // 10
 @Serializable
@@ -57,6 +57,7 @@ data class TurnStartPacket(val playerName: String) : GamePacket
 @Serializable
 data class PlayerRollPacket(val playerName: String, val dice1: Int, val dice2: Int) : GamePacket
 
+/*
 // 12
 @Serializable
 data class PayBailPacket(val playerName: String) : GamePacket
@@ -64,6 +65,7 @@ data class PayBailPacket(val playerName: String) : GamePacket
 // 13
 @Serializable
 data class JailedPacket(val playerName: String) : GamePacket
+*/
 
 // 14
 @Serializable
@@ -80,6 +82,15 @@ data class GainMoneyPacket(val playerName: String, val amount: Int) : GamePacket
 // 17
 @Serializable
 data class CardDrawPacket(val playerName: String, val cardID: Int) : GamePacket
+
+
+// 253
+@Serializable
+class PlaybackStartPacket : GamePacket
+
+// 254
+@Serializable
+class PlaybackEndPacket : GamePacket
 
 // 255
 @Serializable
