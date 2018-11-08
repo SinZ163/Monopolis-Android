@@ -10,6 +10,8 @@ import me.syrin.monopolis.common.game.Monopolis
 import me.syrin.monopolis.common.network.LeaveLobbyPacket
 import me.syrin.monopolis.common.network.NetworkHandler
 import me.syrin.monopolis.common.network.WebSocket
+import org.jetbrains.anko.clearTop
+import org.jetbrains.anko.intentFor
 
 class GameActivity : AppCompatActivity() {
     lateinit var monopolis: Monopolis
@@ -37,7 +39,7 @@ class GameActivity : AppCompatActivity() {
         NetworkHandler.lobby.observe(this, Observer {
             if (it == null)
             {
-                onBackPressed()
+                startActivity(intentFor<MainActivity>().clearTop())
             }
         })
     }
