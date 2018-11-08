@@ -26,7 +26,9 @@ class GameActivity : FragmentActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
 
-        monopolis = Monopolis(this, listOf("Sam", "Trent"))
+        monopolis = Monopolis(this, NetworkHandler.lobby.value!!.players)
+
+        monopolis.start()
 
         (fragment_board as BoardFragment).initialiseBoard(monopolis)
         (fragment_buttons as GameButtonsFragment).game = monopolis
@@ -50,6 +52,7 @@ class GameActivity : FragmentActivity() {
     }
 
     private fun updateUi() {
+        (fragment_buttons as GameButtonsFragment).uiUpdate()
         text_view_money.text = "₩${monopolis.players.find { player -> player.name == NetworkHandler.name }?.balance}"
     }
 
