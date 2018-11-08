@@ -135,6 +135,7 @@ class Monopolis(val activity: FragmentActivity, playerList: List<String> = listO
                                 if (rollJailCount >= 2) {
                                     // this is the third double! jail time
                                     player.sendToJail()
+                                    sendStatus("${packet.playerName} has rolled doubles too many times and has been sent to jail!")
                                     endTurn()
                                 } else {
                                     turnState = TurnState.LandedDoubles
