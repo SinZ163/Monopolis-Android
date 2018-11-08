@@ -179,7 +179,7 @@ class Monopolis(val activity: FragmentActivity, playerList: List<String> = listO
     fun endTurnPressed() {
         val currentPlayer = ((currentPlayer + 1) % players.count())
         val newPlayer = players[currentPlayer]
-        send(TurnStartPacket(newPlayer.name))
+        send(TurnStartPacket(newPlayer.name), true)
     }
     fun rollDicePressed() {
         send(PlayerRollPacket(players[currentPlayer].name, Random.nextInt(1,7), Random.nextInt(1,7)))
@@ -399,11 +399,12 @@ class Monopolis(val activity: FragmentActivity, playerList: List<String> = listO
         // TODO: remove player and cleanup assets
     }
 
-    fun send(packet: GamePacket) {
+    fun send(packet: GamePacket, smurf: Boolean = false) {
         if (!playback) {
             Log.i("Monopolis:send", "Not in playback mode")
             Log.v("Monopolis:send", "Sending $packet")
-            WebSocket.send(packet)
+            if (players[currentPlayer].name == NetworkHandler.name || smurf)
+                WebSocket.send(packet)
         } else {
             Log.i("Monopolis:send", "Predicting we don't need to send due to being in playback mode")
             Log.v("Monopolis:send", "Did not send $packet")
