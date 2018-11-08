@@ -50,7 +50,7 @@ class Monopolis(val activity: FragmentActivity, playerList: List<String> = listO
         bundle.putString("title", title)
         bundle.putString("description", description)
         dialog.arguments = bundle
-        dialog.show(activity.supportFragmentManager, "test")
+        dialog.show(activity.supportFragmentManager, "generic_dialog")
     }
 
     fun readTileDataFromCSV(tileInput: InputStream, nameInput: InputStream): List<Tile> {

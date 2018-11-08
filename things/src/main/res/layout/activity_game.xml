@@ -24,45 +24,30 @@
             android:name="me.syrin.monopolis.common.ChatFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:layout_marginTop="30dp"
             android:layout_marginEnd="30dp" />
 
         <TextView
-            android:id="@+id/text_view_temp"
+            android:id="@+id/text_view_money"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_weight="3"
             android:layout_marginTop="30dp"
             android:layout_marginEnd="30dp"
             android:textSize="30sp"
             android:textAlignment="center"
-            android:text="Player status" />
+            android:text="@string/money" />
 
-        <LinearLayout
+        <fragment
+            android:id="@+id/fragment_buttons"
+            android:name="me.syrin.monopolis.common.GameButtonsFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:layout_marginTop="30dp"
             android:layout_marginEnd="30dp"
-            android:layout_marginBottom="30dp">
-
-            <Button
-                android:id="@+id/button_test"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_margin="15dp"
-                android:text="test" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:textSize="40sp"
-                android:gravity="center_vertical"
-                android:textAlignment="center"
-                android:text="Buttons area" />
-
-        </LinearLayout>
+            android:layout_marginBottom="30dp" />
 
     </LinearLayout>
 

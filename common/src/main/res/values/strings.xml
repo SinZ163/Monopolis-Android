@@ -13,4 +13,12 @@
     <string name="button_start_game">Start</string>
     <string name="button_continue">Continue</string>
     <string name="join">Join</string>
+    <!--Game buttons-->
+    <string name="roll_dice">Roll dice</string>
+    <string name="end_turn">End turn</string>
+    <string name="trade">Trade</string>
+    <string name="property_management">Property management</string>
+    <string name="money">Money</string>
+    <string name="plus">+</string>
+    <string name="minus">-</string>
 </resources>

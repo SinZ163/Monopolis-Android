@@ -4,7 +4,6 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
-import kotlinx.android.synthetic.main.fragment_generic_message_layout.*
 import kotlinx.android.synthetic.main.fragment_generic_message_layout.view.*
 import java.lang.IllegalStateException
 
