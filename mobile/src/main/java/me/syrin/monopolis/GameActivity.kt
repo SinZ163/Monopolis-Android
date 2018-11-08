@@ -6,6 +6,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.activity_game.*
 import me.syrin.monopolis.common.BoardFragment
+import me.syrin.monopolis.common.GameButtonsFragment
 import me.syrin.monopolis.common.game.Monopolis
 import me.syrin.monopolis.common.network.LeaveLobbyPacket
 import me.syrin.monopolis.common.network.NetworkHandler
@@ -22,15 +23,7 @@ class GameActivity : AppCompatActivity() {
         monopolis = Monopolis(this, listOf("Sam", "Trent"))
 
         (fragment2 as BoardFragment).initialiseBoard(monopolis)
-
-        text_view_temp.text = "${monopolis.players[0].name}: ${tempGetLocName(monopolis.players[0].location)}\n${monopolis.players[1].name}: ${tempGetLocName(monopolis.players[1].location)}"
-
-        button_test.setOnClickListener {
-            // do turn
-            monopolis.doTurn()
-            // update player status
-            text_view_temp.text = "${monopolis.players[0].name}: ${tempGetLocName(monopolis.players[0].location)}\n${monopolis.players[1].name}: ${tempGetLocName(monopolis.players[1].location)}\nRoll: ${monopolis.diceTotal()}"
-        }
+        (fragment_buttons as GameButtonsFragment).game = monopolis
 
         monopolis.uiUpdates.observe(this, Observer {
             updateUi()
@@ -46,10 +39,6 @@ class GameActivity : AppCompatActivity() {
 
     private fun updateUi() {
         // TODO: update UI
-    }
-
-    private fun tempGetLocName(i: Int): String {
-        return monopolis.tiles[i].name
     }
 
     override fun onBackPressed() {

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <Button
+        android:id="@+id/button_minus"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="4"
+        android:layout_margin="5dp"
+        android:textSize="30sp"
+        android:text="@string/minus" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_weight="2">
+
+        <TextView
+            android:id="@+id/text_view_property_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textSize="20sp"
+            android:gravity="center"
+            android:text="Property nameerwer erer efeds fsedf fsdefds  dsfdsf " />
+
+        <TextView
+            android:id="@+id/text_view_state"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="Mortgaged" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/button_plus"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="4"
+        android:layout_margin="5dp"
+        android:textSize="30sp"
+        android:text="@string/plus" />
+
+</LinearLayout>
