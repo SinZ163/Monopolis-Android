@@ -22,14 +22,7 @@ class PropertyManagementDialogFragment : DialogFragment() {
             val myView = it.layoutInflater.inflate(R.layout.fragment_property_management_layout, null)
             val viewManager = LinearLayoutManager(activity)
 
-            val properties = mutableListOf<Property>()
-            for (tile in game.tiles) {
-                if (tile is Property) {
-                    properties.add(tile)
-                }
-            }
-            properties.sortBy { property -> property.propertySet }
-            val viewAdapter = PropertyManagementAdapter(properties)
+            val viewAdapter = PropertyManagementAdapter((game.players[game.currentPlayer].properties.sortedBy { property -> property.propertySet }))
 
             myView.recycler_view_properties.apply {
                 layoutManager = viewManager
