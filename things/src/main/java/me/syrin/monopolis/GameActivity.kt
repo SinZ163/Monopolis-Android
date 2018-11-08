@@ -3,6 +3,7 @@ package me.syrin.monopolis
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.activity_game.*
@@ -15,6 +16,7 @@ import me.syrin.monopolis.common.network.NetworkHandler
 import me.syrin.monopolis.common.network.WebSocket
 import org.jetbrains.anko.clearTop
 import org.jetbrains.anko.intentFor
+import org.jetbrains.anko.singleTop
 import org.jetbrains.anko.startActivity
 
 class GameActivity : FragmentActivity() {
@@ -31,6 +33,12 @@ class GameActivity : FragmentActivity() {
 
         monopolis.uiUpdates.observe(this, Observer {
             updateUi()
+        })
+        NetworkHandler.connected.observe(this, Observer {
+            Log.i("GameActivity", "We are being told to evacuate?")
+            if (!it) {
+                startActivity(intentFor<MainActivity>().clearTop().singleTop())
+            }
         })
 
         NetworkHandler.lobby.observe(this, Observer {

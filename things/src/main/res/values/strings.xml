@@ -1,5 +1,4 @@
 <resources>
-    <string name="connecting_to_server">Connecting to server...</string>
     <string name="uk_board">UK Board</string>
     <string name="us_board">US Board</string>
     <string name="change_name">Change name</string>

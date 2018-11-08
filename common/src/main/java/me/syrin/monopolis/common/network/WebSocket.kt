@@ -9,15 +9,23 @@ import org.json.JSONTokener
 import kotlinx.serialization.json.JSON
 
 val URI = java.net.URI("ws://grimm.361zn.is:8000")
+
+interface IConnectionStateChange
+class ConnectionLost : IConnectionStateChange
+data class ConnectionError(val error: Exception?) : IConnectionStateChange
+class ConnectionGained : IConnectionStateChange
+
 class WebSocket(var name: String) : WebSocketClient(URI) {
 
     override fun onOpen(handshakedata: ServerHandshake?) {
         Log.d("WebSocket", "onOpen")
+        EventBus.post(ConnectionGained())
         WebSocket.send(LoginPacket(name))
     }
 
     override fun onClose(code: Int, reason: String?, remote: Boolean) {
         Log.d("WebSocket", "onClose: $reason")
+        EventBus.post(ConnectionLost())
     }
 
     override fun onMessage(message: String?) {
@@ -52,8 +60,8 @@ class WebSocket(var name: String) : WebSocketClient(URI) {
     }
 
     override fun onError(ex: Exception?) {
-        Log.e("WebSocket", "${ex?.message}")
-        ex?.printStackTrace()
+        Log.e("WebSocket", "${ex?.message}", ex)
+        EventBus.post(ConnectionError(ex))
     }
     companion object {
         lateinit var instance: WebSocket
@@ -87,7 +95,8 @@ class WebSocket(var name: String) : WebSocketClient(URI) {
             }
             val container = RawPacket(packetID, packet)
             val json = JSON.stringify(RawPacket.serializer(), container)
-            instance.send(json)
+            if (instance.isOpen)
+                instance.send(json)
         }
     }
 }

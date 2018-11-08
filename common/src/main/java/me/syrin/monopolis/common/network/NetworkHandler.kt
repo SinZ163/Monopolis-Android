@@ -1,6 +1,8 @@
 package me.syrin.monopolis.common.network
 
 import android.annotation.SuppressLint
+import android.os.Handler
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.android.schedulers.AndroidSchedulers
 import me.syrin.monopolis.common.ChatMessage
@@ -20,8 +22,32 @@ class NetworkHandler {
 
         lateinit var name: String
 
+        var playback: Boolean = false
+        var playbackPackets: ArrayList<GamePacket> = arrayListOf()
+
         @SuppressLint("CheckResult")
         fun init(newName: String) {
+            // Above everything else to buzzer beat  WebSocket.init
+            EventBus.subscribe<ConnectionLost>()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe {
+                        Log.i("WebSocket", "Disconnected :(")
+                        Handler().postDelayed({
+                            me.syrin.monopolis.common.network.WebSocket.init(name)
+                        }, 5000)
+                        //nuke EVERYTHING when this happens
+                        lobby.value = null
+                        lobbies.value = mapOf()
+                        chatMessages.value = listOf()
+                        packets.value = listOf()
+
+                        connected.value = false
+                    }
+            EventBus.subscribe<ConnectionGained>()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe {
+                        connected.value = true
+                    }
             connected.value = false
             WebSocket.init(newName)
             name = newName

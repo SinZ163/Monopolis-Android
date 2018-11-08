@@ -2,6 +2,7 @@ package me.syrin.monopolis
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.activity_game.*
@@ -13,6 +14,7 @@ import me.syrin.monopolis.common.network.NetworkHandler
 import me.syrin.monopolis.common.network.WebSocket
 import org.jetbrains.anko.clearTop
 import org.jetbrains.anko.intentFor
+import org.jetbrains.anko.singleTop
 
 class GameActivity : AppCompatActivity() {
     lateinit var monopolis: Monopolis
@@ -27,6 +29,14 @@ class GameActivity : AppCompatActivity() {
 
         monopolis.uiUpdates.observe(this, Observer {
             updateUi()
+        })
+
+
+        NetworkHandler.connected.observe(this, Observer {
+            Log.i("GameActivity", "We are being told to evacuate?")
+            if (!it) {
+                startActivity(intentFor<MainActivity>().clearTop().singleTop())
+            }
         })
 
         NetworkHandler.lobby.observe(this, Observer {
