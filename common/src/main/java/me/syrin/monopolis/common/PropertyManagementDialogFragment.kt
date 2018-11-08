@@ -6,6 +6,7 @@ import android.app.Dialog
 import android.os.Bundle
 import android.widget.LinearLayout
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_property_management_layout.view.*
 import me.syrin.monopolis.common.game.Monopolis
@@ -22,12 +23,16 @@ class PropertyManagementDialogFragment : DialogFragment() {
             val myView = it.layoutInflater.inflate(R.layout.fragment_property_management_layout, null)
             val viewManager = LinearLayoutManager(activity)
 
-            val viewAdapter = PropertyManagementAdapter((game.players[game.currentPlayer].properties.sortedBy { property -> property.propertySet }))
+            val viewAdapter = PropertyManagementAdapter(game, game.players[game.currentPlayer].properties.sortedBy { property -> property.propertySet })
 
             myView.recycler_view_properties.apply {
                 layoutManager = viewManager
                 adapter = viewAdapter
             }
+
+            game.uiUpdates.observe(this, Observer {
+                viewAdapter.update(game.players[game.currentPlayer].properties.sortedBy { property -> property.propertySet })
+            })
 
             builder.setView(myView)
 

@@ -83,6 +83,12 @@ data class GainMoneyPacket(val playerName: String, val amount: Int) : GamePacket
 @Serializable
 data class CardDrawPacket(val playerName: String, val cardID: Int) : GamePacket
 
+// 18
+@Serializable
+data class UpgradePropertyPacket(val playerName: String, val tile: Int) : GamePacket
+// 19
+@Serializable
+data class DowngradePropertyPacket(val playerName: String, val tile: Int) : GamePacket
 
 // 253
 @Serializable

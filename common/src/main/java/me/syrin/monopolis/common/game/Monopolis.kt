@@ -32,6 +32,9 @@ class Monopolis(val activity: FragmentActivity, playerList: List<String> = listO
     }
     var tiles = listOf<Tile>()
 
+    var houseCount = 32
+    var hotelCount = 12
+
     val uiUpdates: MutableLiveData<Int> = MutableLiveData()
     fun updateUI() { uiUpdates.value = uiUpdates.value?:0 + 1 }
 
@@ -188,6 +191,26 @@ class Monopolis(val activity: FragmentActivity, playerList: List<String> = listO
                         val player = playerMap[packet.playerName]!!
                         player.payBail()
                         sendStatus("${packet.playerName} has paid ₩50 to leave Jail!")
+                    }
+                    is UpgradePropertyPacket -> {
+                        val player = playerMap[packet.playerName]!!
+                        val property = tiles[player.location] as Property
+                        if (property.mortgaged) {
+                            property.unmortgate(this)
+                        } else if (property is Estate) {
+                            property.addHouse(this)
+                        }
+                        updateUI()
+                    }
+                    is DowngradePropertyPacket -> {
+                        val player = playerMap[packet.playerName]!!
+                        val property = tiles[player.location] as Property
+                        if (property is Estate && property.houseCount > 0) {
+                            property.removeHouse(this)
+                        } else if (!property.mortgaged) {
+                            property.mortgage(this)
+                        }
+                        updateUI()
                     }
                 }
                 nextPacket += 1
