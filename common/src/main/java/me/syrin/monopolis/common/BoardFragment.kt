@@ -58,9 +58,24 @@ class SquareConstraintLayout : ConstraintLayout {
                 @AttrRes defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        if (widthMeasureSpec < heightMeasureSpec)
-            super.onMeasure(widthMeasureSpec, widthMeasureSpec)
-        else
-            super.onMeasure(heightMeasureSpec, heightMeasureSpec)
+        Log.v("SquareConstraintLayout", "Width: $widthMeasureSpec, Height: $heightMeasureSpec")
+        var height = heightMeasureSpec
+        var width = widthMeasureSpec
+        Log.v("SquareConstraintLayout", "NewWidth: $width, NewHeight: $height")
+
+        //wrap_content causes -2**31 -1 for the value
+        if (height < 0) {
+            height = width
+        }
+        if (width < 0) {
+            width = height
+        }
+        if (width < height) {
+            Log.v("SquareConstraintLayout", "Using width")
+            super.onMeasure(width, height)
+        } else {
+            Log.v("SquareConstraintLayout", "Using height")
+            super.onMeasure(width, height)
+        }
     }
 }
