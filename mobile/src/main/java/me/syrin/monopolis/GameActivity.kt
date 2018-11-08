@@ -22,7 +22,7 @@ class GameActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
 
-        monopolis = Monopolis(this, listOf("Sam", "Trent"))
+        monopolis = Monopolis(this, NetworkHandler.lobby.value!!.players)
 
         (fragment2 as BoardFragment).initialiseBoard(monopolis)
         (fragment_buttons as GameButtonsFragment).game = monopolis

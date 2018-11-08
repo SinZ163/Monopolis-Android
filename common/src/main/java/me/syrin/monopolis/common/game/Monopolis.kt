@@ -111,10 +111,13 @@ class Monopolis(val activity: FragmentActivity, playerList: List<String> = listO
                             if (diceOneAmount == diceTwoAmount) {
                                 // Free from jail
                                 player.freeFromJail()
-                            } else {
+                            } else if(player.remainingJailRolls <= 0) {
+                                // TODO: Prompt user to press the pay bail or GOOJF card
                                 player.payBail()
+                                player.moveForward(packet.dice1 + packet.dice2)
+                            } else {
+                                endTurn()
                             }
-                            player.moveForward(packet.dice1 + packet.dice2)
                         } else {
                             if (packet.dice1 == packet.dice2) {
                                 activity.toast("Doubles!")
