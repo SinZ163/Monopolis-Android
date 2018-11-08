@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
-    android:layout_width="600dp"
-    android:layout_height="100dp">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
     <TextView
         android:id="@+id/game_name"
-        android:layout_width="300dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_weight="3"
         android:layout_gravity="center_vertical"
         android:layout_margin="10dp"
         android:textSize="30sp"
@@ -15,8 +16,9 @@
 
     <TextView
         android:id="@+id/player_count"
-        android:layout_width="150dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_weight="4"
         android:layout_gravity="center_vertical"
         android:layout_margin="10dp"
         android:textSize="20sp"
@@ -25,9 +27,11 @@
     <Button
         android:id="@+id/join_game"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="4"
         android:layout_margin="10dp"
+        android:layout_gravity="center_vertical"
         android:textSize="20sp"
-        android:text="join" />
+        android:text="@string/join" />
 
 </LinearLayout>

@@ -1,6 +1,8 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="AppTheme" parent="android:Theme.Material.Light.NoActionBar" >
+        <item name="android:colorControlHighlight">#8e8e8e</item>
+    </style>
 
 </resources>

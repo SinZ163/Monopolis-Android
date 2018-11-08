@@ -3,4 +3,5 @@
     <string name="uk_board">UK Board</string>
     <string name="us_board">US Board</string>
     <string name="change_name">Change name</string>
+    <string name="lobby_list">Lobby List</string>
 </resources>

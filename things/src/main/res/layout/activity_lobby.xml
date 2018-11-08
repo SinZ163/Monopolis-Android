@@ -3,13 +3,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
     tools:context=".LobbyActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="50sp"
+        android:layout_margin="20dp"
+        android:text="@string/lobby_list" />
 
     <fragment
         android:id="@+id/fragment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:layout_width="600dp"
+        android:layout_height="match_parent"
         android:name="me.syrin.monopolis.common.LobbyFragment" />
 
 </LinearLayout>

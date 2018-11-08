@@ -3,6 +3,7 @@ package me.syrin.monopolis
 import android.app.AlertDialog
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.activity_game.*
 import me.syrin.monopolis.common.BoardFragment
 import me.syrin.monopolis.common.GenericMessageDialogFragment
@@ -30,6 +31,14 @@ class GameActivity : FragmentActivity() {
             // update player status
             text_view_temp.text = "${monopolis.players[0].name}: ${tempGetLocName(monopolis.players[0].location)}\n${monopolis.players[1].name}: ${tempGetLocName(monopolis.players[1].location)}\nRoll: ${monopolis.diceTotal()}"
         }
+
+        monopolis.uiUpdates.observe(this, Observer {
+            updateUi()
+        })
+    }
+
+    private fun updateUi() {
+        // TODO: update UI
     }
 
     private fun tempGetLocName(i: Int): String {
