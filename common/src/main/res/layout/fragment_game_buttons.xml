@@ -13,6 +13,13 @@
         android:text="@string/roll_dice" />
 
     <Button
+        android:id="@+id/button_purchase_property"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:text="@string/purchase_property" />
+
+    <Button
         android:id="@+id/button_pay_bail"
         android:visibility="gone"
         android:layout_width="match_parent"

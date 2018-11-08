@@ -7,9 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_game_buttons.*
 import me.syrin.monopolis.common.game.Monopolis
+import me.syrin.monopolis.common.game.tiles.Property
 import me.syrin.monopolis.common.network.NetworkHandler
 import me.syrin.monopolis.common.network.PayBailPacket
 import me.syrin.monopolis.common.network.UseJailCardPacket
+import me.syrin.monopolis.common.network.PurchasePropertyPacket
 
 class GameButtonsFragment : Fragment() {
 
@@ -24,25 +26,36 @@ class GameButtonsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        disableButtons()
+
         button_roll_dice_end_turn.setOnClickListener {
             when (game.turnState) {
                 Monopolis.TurnState.RollDice -> game.rollDicePressed()
                 Monopolis.TurnState.EndTurn -> game.endTurnPressed()
             }
+            disableButtons()
+        }
+        button_purchase_property.setOnClickListener {
+            game.send(PurchasePropertyPacket(game.players[game.currentPlayer].name, game.players[game.currentPlayer].location))
+            disableButtons()
         }
         button_pay_bail.setOnClickListener {
             game.send(PayBailPacket(game.players[game.currentPlayer].name))
+            disableButtons()
         }
         button_use_jail_card.setOnClickListener {
             game.send(UseJailCardPacket(game.players[game.currentPlayer].name))
+            disableButtons()
         }
         button_trade.setOnClickListener {
             // TODO: open trade dialog
+            disableButtons()
         }
         button_property_management.setOnClickListener {
             val dialog = PropertyManagementDialogFragment()
             dialog.game = game
             dialog.show(activity?.supportFragmentManager, "property_management")
+            disableButtons()
         }
     }
 
@@ -62,10 +75,9 @@ class GameButtonsFragment : Fragment() {
     }
 
     fun displayNormalTurn() {
-        button_roll_dice_end_turn.text = "Roll dice"
-
         // show roll dice
         button_roll_dice_end_turn.isEnabled = true
+        button_roll_dice_end_turn.text = resources.getString(R.string.roll_dice)
 
         // property management and trading always enabled
         button_property_management.isEnabled = true
@@ -77,9 +89,7 @@ class GameButtonsFragment : Fragment() {
     }
 
     fun displayJailTurn(bailRequired: Boolean = false) {
-        button_roll_dice_end_turn.text = "Roll dice"
-
-        // check if jailcards or
+        // check if jailcards
         if (game.players[game.currentPlayer].jailCards.count() > 0) {
             button_use_jail_card.isEnabled = true
         }
@@ -90,12 +100,13 @@ class GameButtonsFragment : Fragment() {
             button_roll_dice_end_turn.isEnabled = true
         }
 
+        // can always pay bail (or die trying)
         button_pay_bail.isEnabled = true
 
         // property management and trading always enabled
         button_property_management.isEnabled = true
+        button_roll_dice_end_turn.text = resources.getString(R.string.roll_dice)
 //        button_trade.isEnabled = true     // TODO: trading
-
 
         // show jail
         button_pay_bail.visibility = View.VISIBLE
@@ -103,12 +114,17 @@ class GameButtonsFragment : Fragment() {
     }
 
     fun displayEndTurn() {
-        button_roll_dice_end_turn.text = "End turn"
         button_roll_dice_end_turn.isEnabled = true
+        if (game.tiles[game.players[game.currentPlayer].location] is Property && (game.tiles[game.players[game.currentPlayer].location] as Property).owner == null) {
+            // if we on a property, and it aint owned
+            button_purchase_property.isEnabled = true   // TODO: dont allow end turn until purchased or auctioned (new TurnState in game)
+        }
+        button_roll_dice_end_turn.text = resources.getString(R.string.end_turn)
     }
 
     fun disableButtons() {
         button_roll_dice_end_turn.isEnabled = false
+        button_purchase_property.isEnabled = false
         button_use_jail_card.isEnabled = false
         button_pay_bail.isEnabled = false
         button_trade.isEnabled = false
