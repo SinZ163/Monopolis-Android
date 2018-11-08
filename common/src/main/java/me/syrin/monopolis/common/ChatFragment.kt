@@ -29,7 +29,7 @@ class ChatFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        edit_text_message.setOnEditorActionListener {v, actionId, event ->
+        edit_text_message.setOnEditorActionListener {_, actionId, _ ->
             return@setOnEditorActionListener when (actionId) {
                 EditorInfo.IME_ACTION_SEND, EditorInfo.IME_ACTION_UNSPECIFIED -> {
                     sendMessage()

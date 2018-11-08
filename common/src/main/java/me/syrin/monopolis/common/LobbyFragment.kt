@@ -26,8 +26,12 @@ class LobbyFragment : Fragment() {
         val viewManager = LinearLayoutManager(context)
         val viewAdapter = LobbyGamesAdapter()
         NetworkHandler.lobbies.observe(this, Observer<Map<Int, Lobby>> {
-            Log.i("Debug", "What is $viewAdapter what is $it what is ${it.values}")
-            viewAdapter.update(it.values)
+            Log.i("Debug", "What is $viewAdapter what is $it")
+            if (it != null) {
+                viewAdapter.update(it.values)
+            } else {
+                Log.e("Debug", "How is this null")
+            }
         })
 
         recycler_view_games.apply {

@@ -2,6 +2,7 @@ package me.syrin.monopolis
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.activity_game.*
@@ -13,6 +14,7 @@ import me.syrin.monopolis.common.network.NetworkHandler
 import me.syrin.monopolis.common.network.WebSocket
 import org.jetbrains.anko.clearTop
 import org.jetbrains.anko.intentFor
+import org.jetbrains.anko.singleTop
 
 class GameActivity : AppCompatActivity() {
     lateinit var monopolis: Monopolis
@@ -20,13 +22,29 @@ class GameActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
 
-        monopolis = Monopolis(this, listOf("Sam", "Trent"))
+        monopolis = Monopolis(this, NetworkHandler.lobby.value!!.players)
 
         (fragment2 as BoardFragment).initialiseBoard(monopolis)
         (fragment_buttons as GameButtonsFragment).game = monopolis
 
         monopolis.uiUpdates.observe(this, Observer {
             updateUi()
+        })
+
+        button_roll.setOnClickListener {
+            monopolis.rollDicePressed()
+        }
+        button_end.setOnClickListener {
+            monopolis.endTurnPressed()
+        }
+
+        monopolis.start()
+
+        NetworkHandler.connected.observe(this, Observer {
+            Log.i("GameActivity", "We are being told to evacuate?")
+            if (!it) {
+                startActivity(intentFor<MainActivity>().clearTop().singleTop())
+            }
         })
 
         NetworkHandler.lobby.observe(this, Observer {
@@ -39,6 +57,11 @@ class GameActivity : AppCompatActivity() {
 
     private fun updateUi() {
         // TODO: update UI
+        button_roll.isEnabled = monopolis.turnState == Monopolis.TurnState.RollDice
+        button_end.isEnabled = monopolis.turnState == Monopolis.TurnState.EndTurn
+        dice1.text = "Dice1: ${monopolis.diceOneAmount}"
+        dice2.text = "Dice1: ${monopolis.diceTwoAmount}"
+        //text_view_temp.text = "${monopolis.players[0].name}: ${tempGetLocName(monopolis.players[0].location)} ${monopolis.players[0].balance}   \n${monopolis.players[1].name}: ${tempGetLocName(monopolis.players[1].location)} ${monopolis.players[1].balance}\nRoll: ${monopolis.diceTotal()}"
     }
 
     override fun onBackPressed() {

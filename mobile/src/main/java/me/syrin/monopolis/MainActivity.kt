@@ -4,18 +4,20 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
+import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.create_game_dialog.view.*
-import me.syrin.monopolis.common.network.CreateLobbyPacket
-import me.syrin.monopolis.common.network.NetworkHandler
-import me.syrin.monopolis.common.network.WebSocket
+import me.syrin.monopolis.common.network.*
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.startActivityForResult
 import org.jetbrains.anko.toast
+import java.net.UnknownHostException
 
 class MainActivity : AppCompatActivity() {
 
@@ -30,6 +32,30 @@ class MainActivity : AppCompatActivity() {
         } else {
             NetworkHandler.init(name)
         }
+
+        NetworkHandler.connected.observe(this, Observer {
+            if (it) {
+                // connected
+                linear_layout_loading?.visibility = View.GONE
+                linear_layout_buttons?.visibility = View.VISIBLE
+            }
+            else {
+                // not connected
+                linear_layout_loading?.visibility = View.VISIBLE
+                linear_layout_buttons?.visibility = View.GONE
+            }
+        })
+
+        val disposable = EventBus.subscribe<ConnectionError>()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                when(it.error) {
+                    is UnknownHostException -> {
+                        toast("No internet access (DNS Resolution Failed)")
+                    }
+                }
+                Log.e("MainActivity", "ConnectionError: ${it.error?.javaClass}", it.error)
+            }
 
         NetworkHandler.lobby.observe(this, Observer {
             if (it?.ingame == true) {

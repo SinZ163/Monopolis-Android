@@ -6,19 +6,11 @@
     tools:context=".GameButtonsFragment">
 
     <Button
-        android:id="@+id/button_roll_dice"
+        android:id="@+id/button_roll_dice_end_turn"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:text="@string/roll_dice" />
-
-    <Button
-        android:id="@+id/button_end_turn"
-        android:visibility="gone"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:text="@string/end_turn" />
 
     <Button
         android:id="@+id/button_pay_bail"
@@ -26,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:text="@string/end_turn" />
+        android:text="Pay bail" />
 
     <Button
         android:id="@+id/button_use_jail_card"
@@ -34,7 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:text="@string/end_turn" />
+        android:text="Use jail card" />
 
     <Button
         android:id="@+id/button_trade"

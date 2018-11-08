@@ -7,7 +7,7 @@ abstract class Property(id: String, name: String, val propertySet: PropertySet, 
     var owner: Player? = null
     var mortgaged: Boolean = false
 
-    override fun onPlayerLand(game: Monopolis, player: Player) {
+    override fun onPlayerLand(game: Monopolis, player: Player) : Boolean {
         // If property owned by another player, pay player
         if (owner != null) {
             chargePlayer(game, player)
@@ -15,10 +15,15 @@ abstract class Property(id: String, name: String, val propertySet: PropertySet, 
 
         // If property not owned, offer to buy
         // TODO: this
+        return true
     }
 
     abstract fun chargePlayer(game: Monopolis, player: Player)
 
+    fun purchase(player: Player) {
+        player.pay(price, null)
+        owner = player
+    }
     fun mortgage() {
         // Change mortgage status and credit player
         if (mortgaged) return

@@ -9,15 +9,23 @@ import org.json.JSONTokener
 import kotlinx.serialization.json.JSON
 
 val URI = java.net.URI("ws://grimm.361zn.is:8000")
+
+interface IConnectionStateChange
+class ConnectionLost : IConnectionStateChange
+data class ConnectionError(val error: Exception?) : IConnectionStateChange
+class ConnectionGained : IConnectionStateChange
+
 class WebSocket(var name: String) : WebSocketClient(URI) {
 
     override fun onOpen(handshakedata: ServerHandshake?) {
         Log.d("WebSocket", "onOpen")
+        EventBus.post(ConnectionGained())
         WebSocket.send(LoginPacket(name))
     }
 
     override fun onClose(code: Int, reason: String?, remote: Boolean) {
         Log.d("WebSocket", "onClose: $reason")
+        EventBus.post(ConnectionLost())
     }
 
     override fun onMessage(message: String?) {
@@ -36,6 +44,17 @@ class WebSocket(var name: String) : WebSocketClient(URI) {
             3 -> JSON.parse(Lobby.serializer(), rawData)
             4 -> JSON.parse(LobbyClosedPacket.serializer(), rawData)
             8 -> JSON.parse(LobbyInfoPacket.serializer(), rawData)
+            10 -> JSON.parse(TurnStartPacket.serializer(), rawData)
+            11 -> JSON.parse(PlayerRollPacket.serializer(), rawData)
+            //12 -> JSON.parse(PayBailPacket.serializer(), rawData)
+            //13 -> JSON.parse(JailedPacket.serializer(), rawData)
+            14 -> JSON.parse(PurchasePropertyPacket.serializer(), rawData)
+            15 -> JSON.parse(PayPersonPacket.serializer(), rawData)
+            16 -> JSON.parse(GainMoneyPacket.serializer(), rawData)
+            17 -> JSON.parse(CardDrawPacket.serializer(), rawData)
+
+            253 -> JSON.parse(PlaybackStartPacket.serializer(), rawData)
+            254 -> JSON.parse(PlaybackEndPacket.serializer(), rawData)
             255 -> JSON.parse(ErrorPacket.serializer(), rawData)
             else -> Log.e("WebSocket", "Unknown packet: $packetID")
         }
@@ -44,8 +63,8 @@ class WebSocket(var name: String) : WebSocketClient(URI) {
     }
 
     override fun onError(ex: Exception?) {
-        Log.e("WebSocket", "${ex?.message}")
-        ex?.printStackTrace()
+        Log.e("WebSocket", "${ex?.message}", ex)
+        EventBus.post(ConnectionError(ex))
     }
     companion object {
         lateinit var instance: WebSocket
@@ -63,6 +82,14 @@ class WebSocket(var name: String) : WebSocketClient(URI) {
                 is CreateLobbyPacket -> 6
                 is JoinLobbyPacket -> 7
                 is StartLobbyPacket -> 9
+                is TurnStartPacket -> 10
+                is PlayerRollPacket -> 11
+                //is PayBailPacket -> 12
+                //is JailedPacket -> 13
+                is PurchasePropertyPacket -> 14
+                is PayPersonPacket -> 15
+                is GainMoneyPacket -> 16
+                is CardDrawPacket -> 17
                 is ErrorPacket -> 255
                 else -> -1
             }
@@ -71,7 +98,8 @@ class WebSocket(var name: String) : WebSocketClient(URI) {
             }
             val container = RawPacket(packetID, packet)
             val json = JSON.stringify(RawPacket.serializer(), container)
-            instance.send(json)
+            if (instance.isOpen)
+                instance.send(json)
         }
     }
 }
