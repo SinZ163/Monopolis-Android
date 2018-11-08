@@ -13,6 +13,7 @@ class Player(val game: Monopolis, val name: String) {
     var jailed: Boolean = false
     var remainingJailRolls: Int = 0 // Not used until player sent to jail
     var jailCards = arrayListOf<Card>()
+    val properties = arrayListOf<Property>()
 
     fun pay(amount: Int, targetPlayer: Player?, isNetworked: Boolean = false) {
         if (isNetworked) {
@@ -43,6 +44,15 @@ class Player(val game: Monopolis, val name: String) {
             game.updateUI()
         } else {
             game.send(GainMoneyPacket(name, amount))
+        }
+    }
+
+    fun purchaseProperty(property: Property) {
+        if (balance >= property.price) {
+            // we can buy
+            pay(property.price, null)
+            property.owner = this
+            properties.add(property)
         }
     }
 

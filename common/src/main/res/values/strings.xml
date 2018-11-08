@@ -22,6 +22,7 @@
     <string name="money">Money</string>
     <string name="plus">+</string>
     <string name="minus">-</string>
+    <string name="purchase_property">Purchase property</string>
     <string name="use_jail_card">Use jail card</string>
     <string name="pay_bail">Pay bail</string>
 </resources>

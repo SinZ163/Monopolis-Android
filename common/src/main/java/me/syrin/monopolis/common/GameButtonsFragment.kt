@@ -7,9 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_game_buttons.*
 import me.syrin.monopolis.common.game.Monopolis
+import me.syrin.monopolis.common.game.tiles.Property
 import me.syrin.monopolis.common.network.NetworkHandler
 import me.syrin.monopolis.common.network.PayBailPacket
 import me.syrin.monopolis.common.network.UseJailCardPacket
+import me.syrin.monopolis.common.network.PurchasePropertyPacket
 
 class GameButtonsFragment : Fragment() {
 
@@ -29,6 +31,10 @@ class GameButtonsFragment : Fragment() {
                 Monopolis.TurnState.RollDice -> game.rollDicePressed()
                 Monopolis.TurnState.EndTurn -> game.endTurnPressed()
             }
+        }
+        button_purchase_property.setOnClickListener {
+            // TODO: send purchase property packet
+            game.send(PurchasePropertyPacket(game.players[game.currentPlayer].name, game.players[game.currentPlayer].location))
         }
         button_pay_bail.setOnClickListener {
             game.send(PayBailPacket(game.players[game.currentPlayer].name))
@@ -62,10 +68,11 @@ class GameButtonsFragment : Fragment() {
     }
 
     fun displayNormalTurn() {
-        button_roll_dice_end_turn.text = "Roll dice"
 
         // show roll dice
         button_roll_dice_end_turn.isEnabled = true
+        button_roll_dice_end_turn.text = resources.getString(R.string.roll_dice)
+//        button_trade.isEnabled = true
 
         // property management and trading always enabled
         button_property_management.isEnabled = true
@@ -77,8 +84,6 @@ class GameButtonsFragment : Fragment() {
     }
 
     fun displayJailTurn(bailRequired: Boolean = false) {
-        button_roll_dice_end_turn.text = "Roll dice"
-
         // check if jailcards or
         if (game.players[game.currentPlayer].jailCards.count() > 0) {
             button_use_jail_card.isEnabled = true
@@ -94,6 +99,7 @@ class GameButtonsFragment : Fragment() {
 
         // property management and trading always enabled
         button_property_management.isEnabled = true
+        button_roll_dice_end_turn.text = resources.getString(R.string.roll_dice)
 //        button_trade.isEnabled = true     // TODO: trading
 
 
@@ -103,12 +109,13 @@ class GameButtonsFragment : Fragment() {
     }
 
     fun displayEndTurn() {
-        button_roll_dice_end_turn.text = "End turn"
         button_roll_dice_end_turn.isEnabled = true
+        button_roll_dice_end_turn.text = resources.getString(R.string.end_turn)
     }
 
     fun disableButtons() {
         button_roll_dice_end_turn.isEnabled = false
+        button_purchase_property.isEnabled = false
         button_use_jail_card.isEnabled = false
         button_pay_bail.isEnabled = false
         button_trade.isEnabled = false

@@ -142,7 +142,7 @@ class Monopolis(val activity: FragmentActivity, playerList: List<String> = listO
                     is PurchasePropertyPacket -> {
                         val player = playerMap[packet.playerName]!!
                         val property = tiles[packet.tile] as Property
-                        property.purchase(player)
+                        player.purchaseProperty(property)
                     }
                     is PayPersonPacket -> {
                         val sender = playerMap[packet.sender]!!
