@@ -26,29 +26,36 @@ class GameButtonsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        disableButtons()
+
         button_roll_dice_end_turn.setOnClickListener {
             when (game.turnState) {
                 Monopolis.TurnState.RollDice -> game.rollDicePressed()
                 Monopolis.TurnState.EndTurn -> game.endTurnPressed()
             }
+            disableButtons()
         }
         button_purchase_property.setOnClickListener {
-            // TODO: send purchase property packet
             game.send(PurchasePropertyPacket(game.players[game.currentPlayer].name, game.players[game.currentPlayer].location))
+            disableButtons()
         }
         button_pay_bail.setOnClickListener {
             game.send(PayBailPacket(game.players[game.currentPlayer].name))
+            disableButtons()
         }
         button_use_jail_card.setOnClickListener {
             game.send(UseJailCardPacket(game.players[game.currentPlayer].name))
+            disableButtons()
         }
         button_trade.setOnClickListener {
             // TODO: open trade dialog
+            disableButtons()
         }
         button_property_management.setOnClickListener {
             val dialog = PropertyManagementDialogFragment()
             dialog.game = game
             dialog.show(activity?.supportFragmentManager, "property_management")
+            disableButtons()
         }
     }
 
@@ -110,6 +117,11 @@ class GameButtonsFragment : Fragment() {
 
     fun displayEndTurn() {
         button_roll_dice_end_turn.isEnabled = true
+        if (game.tiles[game.players[game.currentPlayer].location] is Property && (game.tiles[game.players[game.currentPlayer].location] as Property).owner == null)
+        {
+            // if we on a property, and it aint owned
+            button_purchase_property.isEnabled = true   // TODO: dont allow end turn until purchased or auctioned (new TurnState in game)
+        }
         button_roll_dice_end_turn.text = resources.getString(R.string.end_turn)
     }
 

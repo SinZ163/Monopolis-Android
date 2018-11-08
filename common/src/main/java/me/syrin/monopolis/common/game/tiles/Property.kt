@@ -13,8 +13,6 @@ abstract class Property(id: String, name: String, val propertySet: PropertySet, 
             chargePlayer(game, player)
         }
 
-        // If property not owned, offer to buy
-        // TODO: this
         return true
     }
 
