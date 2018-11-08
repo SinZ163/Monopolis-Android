@@ -2,6 +2,7 @@ package me.syrin.monopolis.common
 
 
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.AttributeSet
 import android.util.Log
@@ -12,12 +13,11 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.annotation.AttrRes
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.lifecycle.Observer
 import me.syrin.monopolis.common.game.Monopolis
+import me.syrin.monopolis.common.game.Player
 import me.syrin.monopolis.common.game.tiles.*
-import me.syrin.monopolis.common.tiles.CardDrawDrawable
-import me.syrin.monopolis.common.tiles.EstateDrawable
-import me.syrin.monopolis.common.tiles.PropertyDrawable
-import me.syrin.monopolis.common.tiles.TaxDrawable
+import me.syrin.monopolis.common.tiles.*
 
 class BoardFragment : Fragment() {
 
@@ -27,10 +27,12 @@ class BoardFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_board, container, false)
 
     }
-    fun updateTile(tile:Tile, index: Int) {
+    var locations: ArrayList<Int> = arrayListOf()
+    fun updateTile(tile:Tile, index: Int, drawable: Drawable? = null) {
         val tileImageID = resources.getIdentifier("tile$index", "id", activity!!.packageName)
         val tileImage = view!!.findViewById(tileImageID) as ImageView
-        tileImage.setImageDrawable(when(tile) {
+        tileImage.setImageDrawable(drawable)
+        tileImage.background = (when(tile) {
             is Go -> resources.getDrawable(R.drawable.go, null)
             is Jail -> resources.getDrawable(R.drawable.jail, null)
             is FreeParking -> resources.getDrawable(R.drawable.freeparking, null)
@@ -45,6 +47,31 @@ class BoardFragment : Fragment() {
     }
 
     fun initialiseBoard(monopolis: Monopolis) {
+        monopolis.uiUpdates.observe(this, Observer {
+            for (location in locations) {
+                Log.d("BoardFragment", "Cleaning up tile: $location (${monopolis.tiles[location].name})")
+                updateTile(monopolis.tiles[location], location)
+            }
+            locations.clear()
+
+            var tileMap: MutableMap<Int, ArrayList<Player>> = mutableMapOf()
+
+            for (player in monopolis.players) {
+                if (player.location !in tileMap.keys) {
+                    tileMap[player.location] = arrayListOf()
+                }
+                tileMap[player.location]!!.add(player)
+
+                Log.d("BoardFragment", "Visualizing that player ${player.name} is at : ${player.location} (${monopolis.tiles[player.location].name})")
+                //updateTile(monopolis.tiles[player.location], player.location, resources.getDrawable(android.R.color.black, null))
+                locations.add(player.location)
+            }
+            Log.i("BoardFragment", "We think everyone is at $tileMap")
+            for (tile in tileMap.keys) {
+                Log.i("BoardFragment", "Showing the locations of ${tileMap[tile]}")
+                updateTile(monopolis.tiles[tile], tile, LocationDrawable(tileMap[tile]!!.toList(), tile/10))
+            }
+        })
         monopolis.tiles.forEachIndexed { index, tile ->
             updateTile(tile, index)
         }

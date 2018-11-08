@@ -20,6 +20,18 @@ import kotlin.random.Random
 
 
 class Monopolis(val activity: FragmentActivity, playerList: List<String> = listOf()) {
+    companion object {
+        val COLOURS: List<List<Int>> = listOf(
+                listOf(255,0,0),
+                listOf(0,255,0),
+                listOf(0,0,255),
+                listOf(255,255,0),
+                listOf(255,0,255),
+                listOf(0,255,255),
+                listOf(255,255,255),
+                listOf(0,0,0)
+        )
+    }
     var tiles = listOf<Tile>()
 
     val uiUpdates: MutableLiveData<Int> = MutableLiveData()
@@ -63,9 +75,8 @@ class Monopolis(val activity: FragmentActivity, playerList: List<String> = listO
                 activity.assets.open("tile_data.csv"),
                 activity.assets.open("tile_names/$board.csv")
         )
-
-        for (name in playerList) {
-            val player = Player(this, name)
+        playerList.forEachIndexed { index, name ->
+            val player = Player(this, name, COLOURS[index])
             players.add(player)
             playerMap = playerMap.plus(Pair(name, player))
         }
