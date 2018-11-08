@@ -57,15 +57,15 @@ data class TurnStartPacket(val playerName: String) : GamePacket
 @Serializable
 data class PlayerRollPacket(val playerName: String, val dice1: Int, val dice2: Int) : GamePacket
 
-/*
+
 // 12
 @Serializable
 data class PayBailPacket(val playerName: String) : GamePacket
 
 // 13
 @Serializable
-data class JailedPacket(val playerName: String) : GamePacket
-*/
+data class UseJailCardPacket(val playerName: String) : GamePacket
+
 
 // 14
 @Serializable

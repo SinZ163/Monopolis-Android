@@ -57,6 +57,7 @@ class GameActivity : AppCompatActivity() {
 
     private fun updateUi() {
         // TODO: update UI
+        (fragment_buttons as GameButtonsFragment).uiUpdate()
         button_roll.isEnabled = monopolis.turnState == Monopolis.TurnState.RollDice
         button_end.isEnabled = monopolis.turnState == Monopolis.TurnState.EndTurn
         dice1.text = "Dice1: ${monopolis.diceOneAmount}"

@@ -46,8 +46,8 @@ class WebSocket(var name: String) : WebSocketClient(URI) {
             8 -> JSON.parse(LobbyInfoPacket.serializer(), rawData)
             10 -> JSON.parse(TurnStartPacket.serializer(), rawData)
             11 -> JSON.parse(PlayerRollPacket.serializer(), rawData)
-            //12 -> JSON.parse(PayBailPacket.serializer(), rawData)
-            //13 -> JSON.parse(JailedPacket.serializer(), rawData)
+            12 -> JSON.parse(PayBailPacket.serializer(), rawData)
+            13 -> JSON.parse(UseJailCardPacket.serializer(), rawData)
             14 -> JSON.parse(PurchasePropertyPacket.serializer(), rawData)
             15 -> JSON.parse(PayPersonPacket.serializer(), rawData)
             16 -> JSON.parse(GainMoneyPacket.serializer(), rawData)
@@ -84,8 +84,8 @@ class WebSocket(var name: String) : WebSocketClient(URI) {
                 is StartLobbyPacket -> 9
                 is TurnStartPacket -> 10
                 is PlayerRollPacket -> 11
-                //is PayBailPacket -> 12
-                //is JailedPacket -> 13
+                is PayBailPacket -> 12
+                is UseJailCardPacket -> 13
                 is PurchasePropertyPacket -> 14
                 is PayPersonPacket -> 15
                 is GainMoneyPacket -> 16
