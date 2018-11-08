@@ -75,11 +75,9 @@ class GameButtonsFragment : Fragment() {
     }
 
     fun displayNormalTurn() {
-
         // show roll dice
         button_roll_dice_end_turn.isEnabled = true
         button_roll_dice_end_turn.text = resources.getString(R.string.roll_dice)
-//        button_trade.isEnabled = true
 
         // property management and trading always enabled
         button_property_management.isEnabled = true
@@ -91,7 +89,7 @@ class GameButtonsFragment : Fragment() {
     }
 
     fun displayJailTurn(bailRequired: Boolean = false) {
-        // check if jailcards or
+        // check if jailcards
         if (game.players[game.currentPlayer].jailCards.count() > 0) {
             button_use_jail_card.isEnabled = true
         }
@@ -102,13 +100,13 @@ class GameButtonsFragment : Fragment() {
             button_roll_dice_end_turn.isEnabled = true
         }
 
+        // can always pay bail (or die trying)
         button_pay_bail.isEnabled = true
 
         // property management and trading always enabled
         button_property_management.isEnabled = true
         button_roll_dice_end_turn.text = resources.getString(R.string.roll_dice)
 //        button_trade.isEnabled = true     // TODO: trading
-
 
         // show jail
         button_pay_bail.visibility = View.VISIBLE
@@ -117,8 +115,7 @@ class GameButtonsFragment : Fragment() {
 
     fun displayEndTurn() {
         button_roll_dice_end_turn.isEnabled = true
-        if (game.tiles[game.players[game.currentPlayer].location] is Property && (game.tiles[game.players[game.currentPlayer].location] as Property).owner == null)
-        {
+        if (game.tiles[game.players[game.currentPlayer].location] is Property && (game.tiles[game.players[game.currentPlayer].location] as Property).owner == null) {
             // if we on a property, and it aint owned
             button_purchase_property.isEnabled = true   // TODO: dont allow end turn until purchased or auctioned (new TurnState in game)
         }
