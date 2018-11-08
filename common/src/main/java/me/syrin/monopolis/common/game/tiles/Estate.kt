@@ -49,6 +49,9 @@ class Estate(id: String, name: String, propertySet: PropertySet, price: Int, val
 
     fun addHouse(game: Monopolis) {
         val cost = houseMap[game.tiles.indexOf(this)/10]!!
+        // Not enough houses / hotels
+        if (game.houseCount == 0 && houseCount < 4) return
+        if (game.hotelCount == 0 && houseCount == 4) return
         // Already have the hotel, go away
         if (houseCount > 4) return
         val set = getPropertySet(game)
@@ -63,6 +66,12 @@ class Estate(id: String, name: String, propertySet: PropertySet, price: Int, val
 
         if (owner != null && owner!!.balance > cost) {
             houseCount += 1
+            if (houseCount == 5) {
+                game.hotelCount -= 1
+                game.houseCount += 4
+            } else {
+                game.houseCount -= 1
+            }
             owner!!.pay(cost, null)
         }
     }
@@ -70,6 +79,8 @@ class Estate(id: String, name: String, propertySet: PropertySet, price: Int, val
         val cost = houseMap[game.tiles.indexOf(this)/10]!! / 2
         // Cant get money from nothing
         if (houseCount <= 0) return
+        // Not enough houses to refill
+        if (houseCount == 5 && game.houseCount < 4) return
         val set = getPropertySet(game)
         for (tile in set) {
             // What
@@ -79,6 +90,12 @@ class Estate(id: String, name: String, propertySet: PropertySet, price: Int, val
         }
         if (owner != null) {
             houseCount -= 1
+            if (houseCount == 4) {
+                game.houseCount -= 4
+                game.hotelCount += 1
+            } else {
+                game.houseCount -= 1
+            }
             owner!!.credit(cost)
         }
     }

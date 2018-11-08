@@ -52,6 +52,8 @@ class WebSocket(var name: String) : WebSocketClient(URI) {
             15 -> JSON.parse(PayPersonPacket.serializer(), rawData)
             16 -> JSON.parse(GainMoneyPacket.serializer(), rawData)
             17 -> JSON.parse(CardDrawPacket.serializer(), rawData)
+            18 -> JSON.parse(UpgradePropertyPacket.serializer(), rawData)
+            19 -> JSON.parse(DowngradePropertyPacket.serializer(), rawData)
 
             253 -> JSON.parse(PlaybackStartPacket.serializer(), rawData)
             254 -> JSON.parse(PlaybackEndPacket.serializer(), rawData)
@@ -90,6 +92,8 @@ class WebSocket(var name: String) : WebSocketClient(URI) {
                 is PayPersonPacket -> 15
                 is GainMoneyPacket -> 16
                 is CardDrawPacket -> 17
+                is UpgradePropertyPacket -> 18
+                is DowngradePropertyPacket -> 19
                 is ErrorPacket -> 255
                 else -> -1
             }
