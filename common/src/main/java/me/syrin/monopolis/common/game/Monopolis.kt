@@ -12,12 +12,10 @@ import me.syrin.monopolis.common.game.cards.CardType
 import me.syrin.monopolis.common.game.tiles.*
 import me.syrin.monopolis.common.network.*
 import org.jetbrains.anko.longToast
-import org.jetbrains.anko.toast
 import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader
 import kotlin.random.Random
-
 
 class Monopolis(val activity: FragmentActivity, playerList: List<String> = listOf()) {
     companion object {
@@ -95,7 +93,7 @@ class Monopolis(val activity: FragmentActivity, playerList: List<String> = listO
                 val packet = it[nextPacket]
                 when(packet) {
                     is TurnStartPacket -> {
-                        activity.toast("${packet.playerName}'s turn now!")
+                        sendStatus("${packet.playerName}'s turn now!")
                         // Cleanup variables from previous turns state
                         rollJailCount = 0
                         diceOneAmount = 0  // Hopefully only used for utility logic
@@ -114,6 +112,8 @@ class Monopolis(val activity: FragmentActivity, playerList: List<String> = listO
                         diceTwoAmount = packet.dice2
                         turnState = TurnState.Landed
 
+                        sendStatus("${packet.playerName} has rolled a $diceOneAmount and $diceTwoAmount!")
+
                         if (isUtilityCard) {
                             isUtilityCard = false
                             // TODO: special case, pay 10x regardless
@@ -130,7 +130,7 @@ class Monopolis(val activity: FragmentActivity, playerList: List<String> = listO
                             }
                         } else {
                             if (packet.dice1 == packet.dice2) {
-                                activity.toast("Doubles!")
+                                sendStatus("${packet.playerName} has rolled doubles!")
                                 // rolled a double
                                 if (rollJailCount >= 2) {
                                     // this is the third double! jail time
@@ -154,6 +154,7 @@ class Monopolis(val activity: FragmentActivity, playerList: List<String> = listO
                         val player = playerMap[packet.playerName]!!
                         val property = tiles[packet.tile] as Property
                         player.purchaseProperty(property)
+                        sendStatus("${packet.playerName} has purchased ${property.name} for ₩${property.price}!")
                     }
                     is PayPersonPacket -> {
                         val sender = playerMap[packet.sender]!!
@@ -161,25 +162,31 @@ class Monopolis(val activity: FragmentActivity, playerList: List<String> = listO
 
                         // TODO: Make sure this is the real deal
                         sender.pay(packet.amount, receiver, true)
+                        sendStatus("${packet.sender} has paid ${packet.receiver?:"the bank"} ₩${packet.amount}!")
                     }
                     is GainMoneyPacket -> {
                         val player = playerMap[packet.playerName]!!
                         // TODO: Make sure this is the real deal
                         player.credit(packet.amount, true)
+                        sendStatus("${packet.playerName} has received ₩${packet.amount}!")
                     }
                     is CardDrawPacket -> {
                         // TODO: do lookup stuff and apply
                         val player = playerMap[packet.playerName]!!
                         val cardTile = tiles[player.location] as CardDraw
-                        cardTile.draw(this, player ,packet.cardID)
+                        cardTile.draw(this, player, packet.cardID)
+                        val card = cardTile.cards.find { card -> card.cardId == packet.cardID }!!
+                        sendStatus("${packet.playerName} has drawn the '${card.title}' card from ${cardTile.name}!")
                     }
                     is UseJailCardPacket -> {
                         val player = playerMap[packet.playerName]!!
                         player.useJailCard()
+                        sendStatus("${packet.playerName} has used a 'Get out of Jail Free' card to leave Jail!")
                     }
                     is PayBailPacket -> {
                         val player = playerMap[packet.playerName]!!
                         player.payBail()
+                        sendStatus("${packet.playerName} has paid ₩50 to leave Jail!")
                     }
                 }
                 nextPacket += 1
@@ -192,7 +199,7 @@ class Monopolis(val activity: FragmentActivity, playerList: List<String> = listO
         when(turnState) {
             TurnState.Landed -> turnState = TurnState.EndTurn
             TurnState.LandedDoubles -> turnState = TurnState.RollDice
-            else -> activity.toast("How did you do this")
+            else -> sendStatus("BAD THINGS ARE HAPPENING!")
         }
         updateUI()
     }
@@ -334,7 +341,6 @@ class Monopolis(val activity: FragmentActivity, playerList: List<String> = listO
                     },
                     Card(14, CardType.CommunityChest, "You are assessed for street repairs", "Pay ₩40 per house and ₩115 per hotel you own.") { game, player, card ->
                         // TODO: requires houses and hotels to be implemented
-                        activity.toast("Pretend you lost money")
                         endTurn()
                     },
                     Card(15, CardType.CommunityChest, "You have won second prize in a beauty contest", "Collect ₩10.") { game, player, card ->
@@ -381,7 +387,6 @@ class Monopolis(val activity: FragmentActivity, playerList: List<String> = listO
                     },
                     Card(9, CardType.Chance, "Make general repairs on all your property", "For each house pay ₩25, For each hotel pay ₩100.") { game, player, card ->
                         // TODO: requires houses and hotels to be implemented
-                        activity.toast("Pretend you lost money please")
                         endTurn()
                     },
                     Card(10, CardType.Chance, "Pay poor tax of ₩15", "Pay ₩15.") { game, player, card ->
@@ -420,7 +425,7 @@ class Monopolis(val activity: FragmentActivity, playerList: List<String> = listO
         // TODO: remove player and cleanup assets
     }
 
-    fun send(packet: GamePacket, smurf: Boolean = false) {
+    fun send(packet: IPacket, smurf: Boolean = false) {
         if (!playback) {
             Log.i("Monopolis:send", "Not in playback mode")
             Log.v("Monopolis:send", "Sending $packet")
@@ -430,5 +435,9 @@ class Monopolis(val activity: FragmentActivity, playerList: List<String> = listO
             Log.i("Monopolis:send", "Predicting we don't need to send due to being in playback mode")
             Log.v("Monopolis:send", "Did not send $packet")
         }
+    }
+
+    fun sendStatus(message: String) {
+        send(ChatPacket(message, ""))   // empty string is for events
     }
 }
