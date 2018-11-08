@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Monopolis</string>
+    <string name="lobby_list">Lobby List</string>
 </resources>

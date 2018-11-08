@@ -33,6 +33,13 @@ class GameActivity : AppCompatActivity() {
         monopolis.uiUpdates.observe(this, Observer {
             updateUi()
         })
+
+        NetworkHandler.lobby.observe(this, Observer {
+            if (it == null)
+            {
+                onBackPressed()
+            }
+        })
     }
 
     private fun updateUi() {
@@ -51,7 +58,6 @@ class GameActivity : AppCompatActivity() {
         builder.setPositiveButton("Leave") { _, _ ->
             // leave game
             WebSocket.send(LeaveLobbyPacket(NetworkHandler.lobby.value!!.id))
-            super.onBackPressed()
         }
 
         builder.setNegativeButton("Cancel") { dialog, _ ->
