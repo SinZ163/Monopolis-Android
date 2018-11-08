@@ -49,13 +49,11 @@ class GameButtonsFragment : Fragment() {
         }
         button_trade.setOnClickListener {
             // TODO: open trade dialog
-            disableButtons()
         }
         button_property_management.setOnClickListener {
             val dialog = PropertyManagementDialogFragment()
             dialog.game = game
             dialog.show(activity?.supportFragmentManager, "property_management")
-            disableButtons()
         }
     }
 
@@ -79,8 +77,11 @@ class GameButtonsFragment : Fragment() {
         button_roll_dice_end_turn.isEnabled = true
         button_roll_dice_end_turn.text = resources.getString(R.string.roll_dice)
 
-        // property management and trading always enabled
-        button_property_management.isEnabled = true
+        // show property management if player has atleast 1 property
+        if (game.players[game.currentPlayer].properties.count() > 0) {
+            button_property_management.isEnabled = true
+        }
+        // trading always enabled
 //        button_trade.isEnabled = true     // TODO: trading
 
         // hide jail

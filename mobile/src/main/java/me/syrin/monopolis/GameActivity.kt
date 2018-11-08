@@ -4,9 +4,14 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.lifecycle.Observer
+import androidx.viewpager.widget.ViewPager
 import kotlinx.android.synthetic.main.activity_game.*
 import me.syrin.monopolis.common.BoardFragment
+import me.syrin.monopolis.common.ChatFragment
 import me.syrin.monopolis.common.GameButtonsFragment
 import me.syrin.monopolis.common.game.Monopolis
 import me.syrin.monopolis.common.network.LeaveLobbyPacket
@@ -16,29 +21,19 @@ import org.jetbrains.anko.clearTop
 import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.singleTop
 
+private const val NUM_PAGES = 2
+
 class GameActivity : AppCompatActivity() {
-    lateinit var monopolis: Monopolis
+    val gameFragment = GameFragment()
+    val chatFragment = ChatFragment()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
 
-        monopolis = Monopolis(this, NetworkHandler.lobby.value!!.players)
-
-        (fragment2 as BoardFragment).initialiseBoard(monopolis)
-        (fragment_buttons as GameButtonsFragment).game = monopolis
-
-        monopolis.uiUpdates.observe(this, Observer {
-            updateUi()
-        })
-
-        button_roll.setOnClickListener {
-            monopolis.rollDicePressed()
-        }
-        button_end.setOnClickListener {
-            monopolis.endTurnPressed()
-        }
-
-        monopolis.start()
+        // The pager adapter, which provides the pages to the view pager widget.
+        val pagerAdapter = ScreenSlidePagerAdapter(supportFragmentManager)
+        view_pager_game.adapter = pagerAdapter
 
         NetworkHandler.connected.observe(this, Observer {
             Log.i("GameActivity", "We are being told to evacuate?")
@@ -48,38 +43,44 @@ class GameActivity : AppCompatActivity() {
         })
 
         NetworkHandler.lobby.observe(this, Observer {
-            if (it == null)
-            {
+            if (it == null) {
                 startActivity(intentFor<MainActivity>().clearTop())
             }
         })
     }
 
-    private fun updateUi() {
-        // TODO: update UI
-        (fragment_buttons as GameButtonsFragment).uiUpdate()
-        button_roll.isEnabled = monopolis.turnState == Monopolis.TurnState.RollDice
-        button_end.isEnabled = monopolis.turnState == Monopolis.TurnState.EndTurn
-        dice1.text = "Dice1: ${monopolis.diceOneAmount}"
-        dice2.text = "Dice1: ${monopolis.diceTwoAmount}"
-        //text_view_temp.text = "${monopolis.players[0].name}: ${tempGetLocName(monopolis.players[0].location)} ${monopolis.players[0].balance}   \n${monopolis.players[1].name}: ${tempGetLocName(monopolis.players[1].location)} ${monopolis.players[1].balance}\nRoll: ${monopolis.diceTotal()}"
+    override fun onBackPressed() {
+        if (view_pager_game.currentItem == 0) {
+            // If the user is currently looking at the first step, allow the system to handle the
+            // Back button. This calls finish() on this activity and pops the back stack.
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle("Leave?")
+            builder.setMessage("Are you sure you want to leave this game?")
+
+            builder.setPositiveButton("Leave") { _, _ ->
+                // leave game
+                WebSocket.send(LeaveLobbyPacket(NetworkHandler.lobby.value!!.id))
+            }
+
+            builder.setNegativeButton("Cancel") { dialog, _ ->
+                // cancel
+                dialog.cancel()
+            }
+
+            builder.show()
+        } else {
+            // Otherwise, select the previous step.
+            view_pager_game.currentItem = view_pager_game.currentItem - 1
+        }
     }
 
-    override fun onBackPressed() {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("Leave?")
-        builder.setMessage("Are you sure you want to leave this game?")
+    private inner class ScreenSlidePagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
+        override fun getCount(): Int = NUM_PAGES
 
-        builder.setPositiveButton("Leave") { _, _ ->
-            // leave game
-            WebSocket.send(LeaveLobbyPacket(NetworkHandler.lobby.value!!.id))
+        override fun getItem(position: Int): Fragment = when (position) {
+            0 -> gameFragment
+            1 -> chatFragment
+            else -> throw Exception("3 > 2 = no")
         }
-
-        builder.setNegativeButton("Cancel") { dialog, _ ->
-            // cancel
-            dialog.cancel()
-        }
-
-        builder.show()
     }
 }
