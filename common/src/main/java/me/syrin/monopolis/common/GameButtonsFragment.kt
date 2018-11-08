@@ -31,11 +31,9 @@ class GameButtonsFragment : Fragment() {
             }
         }
         button_pay_bail.setOnClickListener {
-            game.players[game.currentPlayer].payBail()
             game.send(PayBailPacket(game.players[game.currentPlayer].name))
         }
         button_use_jail_card.setOnClickListener {
-            game.players[game.currentPlayer].useJailCard()
             game.send(UseJailCardPacket(game.players[game.currentPlayer].name))
         }
         button_trade.setOnClickListener {

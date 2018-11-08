@@ -162,6 +162,14 @@ class Monopolis(val activity: FragmentActivity, playerList: List<String> = listO
                         val cardTile = tiles[player.location] as CardDraw
                         cardTile.draw(this, player ,packet.cardID)
                     }
+                    is UseJailCardPacket -> {
+                        val player = playerMap[packet.playerName]!!
+                        player.useJailCard()
+                    }
+                    is PayBailPacket -> {
+                        val player = playerMap[packet.playerName]!!
+                        player.payBail()
+                    }
                 }
                 nextPacket += 1
             }
