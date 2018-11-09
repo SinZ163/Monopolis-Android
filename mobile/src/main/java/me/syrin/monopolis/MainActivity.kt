@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
         val name = preferences.getString("playerName", null)
         if (name == null) {
             startActivityForResult<SettingsActivity>(0)
-        } else {
+        } else if (NetworkHandler.connected.value != true) {
             NetworkHandler.init(name)
         }
 

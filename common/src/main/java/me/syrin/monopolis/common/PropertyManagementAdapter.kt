@@ -40,6 +40,7 @@ class PropertyManagementAdapter(private val game: Monopolis, private var propert
         val property = properties[position]
         if (property.mortgaged) {
             holder.propertyView.button_minus.isEnabled = false
+            holder.propertyView.text_view_state.text = game.activity.getString(R.string.mortgaged)
             holder.propertyView.button_plus.isEnabled = property.canMortgage(game)
         } else if (property is Estate) {
             val set = property.getPropertySet(game)
@@ -50,7 +51,7 @@ class PropertyManagementAdapter(private val game: Monopolis, private var propert
                 if (item !is Estate) break
 
                 if (item.owner != property.owner) {
-                    canSell = false
+//                    canSell = false
                     canBuy = false
                     continue
                 }
@@ -67,6 +68,16 @@ class PropertyManagementAdapter(private val game: Monopolis, private var propert
             }
             holder.propertyView.button_minus.isEnabled = canSell
             holder.propertyView.button_plus.isEnabled = canBuy
+
+            // state text
+            when {
+                property.houseCount == 0 -> // its just rent
+                    holder.propertyView.text_view_state.text = game.activity.getString(R.string.no_houses)
+                property.houseCount < 5 -> // there are houses
+                    holder.propertyView.text_view_state.text = property.houseCount.toString() + game.activity.getString(R.string.space_houses)
+                property.houseCount == 5 -> // there is a hotel
+                    holder.propertyView.text_view_state.text = game.activity.getString(R.string.hotel)
+            }
         }
 
         holder.propertyView.button_minus.setOnClickListener {

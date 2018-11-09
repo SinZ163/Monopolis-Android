@@ -35,7 +35,7 @@ abstract class Property(id: String, name: String, val propertySet: PropertySet, 
         if (owner == null) return
 
         val cost = 0.6 * price
-        if (owner!!.balance > cost) return
+        if (owner!!.balance < cost) return
         owner!!.pay(cost.toInt(), null)
         mortgaged = false
     }

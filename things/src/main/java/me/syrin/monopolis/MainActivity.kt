@@ -27,7 +27,7 @@ class MainActivity : FragmentActivity() {
         if (name == null) {
             startActivity<SettingsActivity>()
         }
-        else {
+        else if (NetworkHandler.connected.value != true) {
             NetworkHandler.init(name)
         }
 

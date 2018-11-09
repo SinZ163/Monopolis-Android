@@ -24,4 +24,8 @@
     <string name="purchase_property">Purchase property</string>
     <string name="use_jail_card">Use jail card</string>
     <string name="pay_bail">Pay bail</string>
+    <string name="hotel">Hotel</string>
+    <string name="space_houses">houses</string>
+    <string name="no_houses">No houses</string>
+    <string name="mortgaged">Mortgaged</string>
 </resources>

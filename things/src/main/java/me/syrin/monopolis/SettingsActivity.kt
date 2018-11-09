@@ -99,6 +99,7 @@ class SettingsActivity : FragmentActivity() {
     private fun setName(name: String) {
         preferences.edit().putString("playerName", name).apply()
         displayName(name)
+        toast("Name will be set to $name when device restarts")
         if (NetworkHandler.connected.value != true) {
             NetworkHandler.init(preferences.getString("playerName", null) as String)
         }
